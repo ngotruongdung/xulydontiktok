@@ -11,17 +11,93 @@ import io
 from datetime import datetime
 
 # 1. Cấu hình giao diện Web
-st.set_page_config(page_title=" Warehouse Pro", layout="wide")
+st.set_page_config(page_title="Warehouse Pro", page_icon="📦", layout="wide")
 
 st.markdown("""
-    <style>
-    /* CSS để làm bảng Web trông sạch sẽ hơn */
-    .stDataFrame { border: 1px solid #e6e9ef; border-radius: 10px; }
-    .sku-title { color: #1f77b4; font-size: 20px; font-weight: bold; margin-top: 20px; }
-    </style>
-    """, unsafe_allow_html=True)
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-st.title("👕 Hệ Thống Soạn Hàng")
+.stApp { font-family: 'Inter', sans-serif; }
+#MainMenu, footer, header { visibility: hidden; }
+.block-container { padding-top: 1.2rem; padding-bottom: 1rem; max-width: 960px; }
+
+/* === COMPACT HEADER === */
+.app-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px solid rgba(128,128,128,0.15);
+}
+.app-header .app-icon { font-size: 26px; }
+.app-header .app-title {
+    font-size: 20px; font-weight: 700; color: inherit; margin: 0;
+}
+.app-header .app-sub {
+    font-size: 12px; color: rgba(128,128,128,0.7); margin: 0;
+}
+
+/* === METRIC ROW === */
+.metric-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px; margin-bottom: 16px;
+}
+.metric-card {
+    border-radius: 10px; padding: 14px 16px;
+    border: 1px solid rgba(128,128,128,0.12);
+    background: rgba(128,128,128,0.04);
+}
+.metric-card .metric-label {
+    font-size: 11px; color: rgba(128,128,128,0.6);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 2px; font-weight: 500;
+}
+.metric-card .metric-value {
+    font-size: 24px; font-weight: 700; margin: 0; color: inherit;
+}
+
+/* === SKU HEADER === */
+.sku-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0; margin: 10px 0 4px;
+    border-bottom: 2px solid rgba(99,102,241,0.15);
+}
+.sku-row .sku-name {
+    font-size: 14px; font-weight: 700; color: inherit;
+    display: flex; align-items: center; gap: 6px;
+}
+.sku-row .sku-badge {
+    background: #6366f1; color: #fff;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 8px; border-radius: 4px;
+}
+.sku-row .sku-count { font-size: 13px; font-weight: 600; color: #6366f1; }
+
+/* === DOWNLOAD BUTTON === */
+.stDownloadButton > button {
+    background: #6366f1 !important; color: white !important;
+    border: none !important; border-radius: 8px !important;
+    padding: 10px 24px !important; font-weight: 600 !important;
+    font-size: 14px !important; transition: background 0.2s !important;
+}
+.stDownloadButton > button:hover { background: #4f46e5 !important; }
+
+/* === SELECTBOX === */
+.stSelectbox label { font-weight: 500 !important; font-size: 13px !important; }
+
+/* === DATAFRAME === */
+.stDataFrame { border-radius: 8px; }
+</style>
+""", unsafe_allow_html=True)
+
+# === COMPACT HEADER ===
+st.markdown('''
+<div class="app-header">
+    <div class="app-icon">📦</div>
+    <div>
+        <div class="app-title">Warehouse Pro</div>
+        <div class="app-sub">Xử lý đơn hàng &amp; soạn hàng</div>
+    </div>
+</div>
+''', unsafe_allow_html=True)
 
 # --- HÀM TÁCH SKU TỪ CỘT G (trước dấu _ đầu tiên) ---
 def parse_sku_from_col_g(val):
@@ -40,6 +116,9 @@ def parse_color_size_from_col_i(val):
         last_comma_index = val.rfind(',')
         color = val[:last_comma_index].strip()  # Tất cả trước dấu phẩy cuối cùng
         size = val[last_comma_index + 1:].strip() if last_comma_index < len(val) - 1 else "F"
+        # Chỉ lấy phần trước dấu : (ví dụ: "Size 120 : 17 - 20kg" → "Size 120")
+        if ':' in size:
+            size = size.split(':')[0].strip()
         # Loại bỏ dấu phẩy trong phần màu (thay bằng khoảng trắng)
         color = color.replace(',', ' ').strip()
         # Loại bỏ khoảng trắng thừa
@@ -47,6 +126,9 @@ def parse_color_size_from_col_i(val):
     else:
         color = val
         size = "F"
+    # Cắt phần sau dấu : cho size (áp dụng cho cả trường hợp không có dấu phẩy)
+    if ':' in size:
+        size = size.split(':')[0].strip()
     return pd.Series([color, size])
 
 # --- HÀM HELPER THÊM FIELD CODE VÀO PARAGRAPH ---
@@ -330,8 +412,7 @@ def export_to_word(detail_summary, total_orders, total_items, shop_name="TITIKID
     doc.save(target)
     return target.getvalue()
 
-# === THÔNG TIN XUẤT FILE (CHỌN TRƯỚC KHI TẢI FILE) ===
-st.markdown("#### ⚙️ Cài đặt xuất file Word")
+# === THÔNG TIN XUẤT FILE ===
 
 # Tự động chọn ca theo giờ hiện tại
 current_hour = datetime.now().hour
@@ -345,7 +426,7 @@ with col_s2:
 with col_s3:
     shift = st.selectbox("🕐 Ca", ["SÁNG", "CHIỀU"], index=default_shift_index, key="shift")
 
-st.divider()
+st.markdown("<br>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(f"📂 Tải file đơn hàng ({platform})", type=["csv", "xlsx"])
 
@@ -398,8 +479,24 @@ if uploaded_file:
         total_items = int(df['SL'].sum())
         total_orders = df[id_col].nunique()
 
-        # Dashboard tổng quan
-        st.markdown(f"### 📊 Tổng đơn: **{total_orders}** | Tổng áo: **{total_items}** cái")
+        # Dashboard tổng quan - Metric Cards
+        unique_skus_count = detail_summary['SKU'].nunique()
+        st.markdown(f'''
+        <div class="metric-row">
+            <div class="metric-card">
+                <div class="metric-label">🛒 Tổng đơn</div>
+                <div class="metric-value">{total_orders}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">👕 Tổng SP</div>
+                <div class="metric-value">{total_items}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">📋 Loại SKU</div>
+                <div class="metric-value">{unique_skus_count}</div>
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         
         # Xử lý gôm đơn
         detail_summary = df.groupby(['SKU_ID', 'PL', 'SZ'])['SL'].sum().reset_index()
@@ -411,7 +508,7 @@ if uploaded_file:
         word_data = export_to_word(detail_summary, total_orders, total_items, shop_name, platform, shift)
         st.download_button("📥 TẢI FILE WORD SOẠN HÀNG", word_data, word_filename)
 
-        st.divider()
+        st.markdown("<br>", unsafe_allow_html=True)
 
         # --- HIỂN THỊ WEB APP CĂN CHỈNH ĐỀU ---
         unique_skus = detail_summary['SKU'].unique()
@@ -420,15 +517,19 @@ if uploaded_file:
             sku_data = detail_summary[detail_summary['SKU'] == sku].sort_values(by='Size')
             total_sku = int(sku_data['SL'].sum())
             
-            st.markdown(f'<div class="sku-title">📦 SKU: {sku} (Tổng: {total_sku} cái)</div>', unsafe_allow_html=True)
+            st.markdown(f'''
+            <div class="sku-row">
+                <div class="sku-name"><span class="sku-badge">{sku}</span> Sản phẩm</div>
+                <div class="sku-count">{total_sku} cái</div>
+            </div>
+            ''', unsafe_allow_html=True)
             
-            # ĐÂY LÀ PHẦN CĂN CHỈNH WEB: Ép độ rộng các cột cố định
             st.dataframe(
                 sku_data[['Phân loại', 'Size', 'SL']],
                 use_container_width=True,
                 hide_index=True,
                 column_config={
-                    "Phân loại": st.column_config.TextColumn("🏷️ PHÂN LOẠI / MÀU SẮC", width="large"),
+                    "Phân loại": st.column_config.TextColumn("🏷️ PHÂN LOẠI / MÀU", width="large"),
                     "Size": st.column_config.TextColumn("📏 SIZE", width="medium"),
                     "SL": st.column_config.NumberColumn("🔢 SL", width="small", format="%d")
                 }
