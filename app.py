@@ -479,6 +479,10 @@ if uploaded_file:
         total_items = int(df['SL'].sum())
         total_orders = df[id_col].nunique()
 
+        # Xử lý gôm đơn
+        detail_summary = df.groupby(['SKU_ID', 'PL', 'SZ'])['SL'].sum().reset_index()
+        detail_summary.columns = ['SKU', 'Phân loại', 'Size', 'SL']
+
         # Dashboard tổng quan - Metric Cards
         unique_skus_count = detail_summary['SKU'].nunique()
         st.markdown(f'''
@@ -497,10 +501,6 @@ if uploaded_file:
             </div>
         </div>
         ''', unsafe_allow_html=True)
-        
-        # Xử lý gôm đơn
-        detail_summary = df.groupby(['SKU_ID', 'PL', 'SZ'])['SL'].sum().reset_index()
-        detail_summary.columns = ['SKU', 'Phân loại', 'Size', 'SL']
 
         # Nút tải Word
         current_date_file = datetime.now().strftime('%d.%m')
