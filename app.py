@@ -11,348 +11,403 @@ import io
 from datetime import datetime
 
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Order Studio", page_icon="◈", layout="wide")
+st.set_page_config(page_title="Order Studio", page_icon="📦", layout="wide")
 
-# ─── GLOBAL STYLES — 2026 Minimalism ──────────────────────────────────────────
+# ─── GLOBAL STYLES — Card Minimalism ──────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── BASE ────────────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   BASE RESET & FOUNDATION
+════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; }
-.stApp { font-family: 'Inter', system-ui, sans-serif; background: #fafafa; }
-#MainMenu, footer, header { visibility: hidden; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+.stApp {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #F5F5F7;
+    min-height: 100vh;
+}
+#MainMenu, footer, header { visibility: hidden; display: none; height: 0; overflow: hidden; }
 .block-container {
     padding-top: 2rem !important;
-    padding-bottom: 4rem !important;
-    max-width: 900px !important;
+    padding-bottom: 5rem !important;
+    max-width: 800px !important;
 }
 
-/* ── HEADER ──────────────────────────────────────────────────────────────── */
-.os-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding-bottom: 28px;
-    margin-bottom: 36px;
-    border-bottom: 1px solid #e5e5e5;
+/* ════════════════════════════════════════════════════════════
+   TOPBAR
+════════════════════════════════════════════════════════════ */
+.os-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 0 20px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(99,102,241,0.12);
 }
-.os-wordmark {
-    display: flex; align-items: center; gap: 12px;
+.os-topbar-brand {
+    display: flex; align-items: center; gap: 14px;
 }
-.os-logo {
-    width: 36px; height: 36px;
-    background: #111;
-    border-radius: 8px;
+.os-topbar-logo {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: #fff; font-weight: 700;
-    letter-spacing: -1px; font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(99,102,241,0.30);
     flex-shrink: 0;
 }
-.os-title {
-    font-size: 17px; font-weight: 600;
-    color: #111; letter-spacing: -0.3px;
-    margin-bottom: 2px;
+.os-topbar-name {
+    font-size: 17px; font-weight: 700;
+    color: #1a1a2e; letter-spacing: -0.4px;
+    margin-bottom: 3px;
 }
-.os-sub {
-    font-size: 12px; color: #999; font-weight: 400;
+.os-topbar-sub {
+    font-size: 12px; color: #9ca3af; font-weight: 400;
 }
-.os-status {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 500; color: #666;
-    padding: 5px 10px;
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
+.os-topbar-status {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 500; color: #6b7280;
     background: #fff;
+    border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 100px;
+    padding: 6px 14px;
+    box-shadow: 0 1px 4px rgba(99,102,241,0.06);
 }
 .os-status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%;
     background: #22c55e;
-    animation: pulse 2s infinite;
+    display: inline-block;
+    animation: sdot 2s ease-in-out infinite;
 }
-@keyframes pulse {
+@keyframes sdot {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.4; }
 }
 
-/* ── SECTION LABEL ───────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   SECTION LABEL
+════════════════════════════════════════════════════════════ */
 .os-section {
-    display: flex; align-items: center; gap: 10px;
-    margin: 32px 0 16px;
+    display: flex; align-items: center; gap: 12px;
+    margin: 36px 0 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #EBEBEF;
 }
 .os-section-num {
-    font-size: 10px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    background: #6366f1;
+    border-radius: 7px;
+    font-size: 11px; font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
-    color: #aaa; letter-spacing: 0.5px;
-    min-width: 20px;
+    color: #fff;
+    flex-shrink: 0;
 }
 .os-section-title {
-    font-size: 13px; font-weight: 600; color: #111;
-    letter-spacing: -0.1px;
-}
-.os-section-sep {
-    flex: 1; height: 1px; background: #e8e8e8;
-}
-.os-section-tag {
-    font-size: 10px; font-weight: 500; color: #bbb;
-    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px; font-weight: 700; color: #374151;
+    letter-spacing: -0.2px;
 }
 
-/* ── CARD BASE ───────────────────────────────────────────────────────────── */
-.os-card {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-/* ── SETTINGS GRID ───────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   SETTINGS SELECTS
+════════════════════════════════════════════════════════════ */
 .stSelectbox > div > div {
-    border: 1px solid #e5e5e5 !important;
-    border-radius: 8px !important;
-    background: #fff !important;
-    font-size: 13px !important;
+    border: 1.5px solid #e5e8f4 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    font-size: 14px !important;
     font-family: 'Inter', sans-serif !important;
-    transition: border-color 0.15s !important;
+    transition: border-color 0.18s, box-shadow 0.18s !important;
+    box-shadow: 0 1px 4px rgba(99,102,241,0.05) !important;
 }
 .stSelectbox > div > div:hover {
-    border-color: #bbb !important;
+    border-color: #a5b4fc !important;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.10) !important;
 }
 .stSelectbox > div > div:focus-within {
-    border-color: #111 !important;
-    box-shadow: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12) !important;
 }
 .stSelectbox label {
-    font-size: 11px !important;
+    font-size: 13px !important;
     font-weight: 600 !important;
-    color: #999 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.6px !important;
-    margin-bottom: 6px !important;
+    color: #6b7280 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 8px !important;
 }
 
-/* ── FILE UPLOADER ───────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   FILE UPLOADER
+════════════════════════════════════════════════════════════ */
 [data-testid="stFileUploader"] {
-    background: #fff;
-    border: 1px dashed #ddd;
-    border-radius: 10px;
-    padding: 4px;
-    transition: border-color 0.2s;
+    background: #ffffff;
+    border: 1.5px solid #E5E7EB !important;
+    border-radius: 14px !important;
+    padding: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-top: 6px !important;
 }
 [data-testid="stFileUploader"]:hover {
-    border-color: #aaa;
+    border-color: #a5b4fc !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
 }
 [data-testid="stFileUploader"] label {
-    font-size: 11px !important;
+    font-size: 13px !important;
     font-weight: 600 !important;
-    color: #888 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.6px !important;
+    color: #374151 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    text-align: center !important;
+    display: block !important;
+    padding-top: 8px !important;
 }
 [data-testid="stFileUploaderDropzone"] {
     border: none !important;
     background: transparent !important;
-    padding: 12px 16px !important;
+    padding: 24px 20px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+[data-testid="stFileUploaderDropzone"] > div {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
 }
 [data-testid="stFileUploaderDropzoneInstructions"] {
-    font-size: 12px !important;
-    color: #aaa !important;
+    font-size: 13px !important;
+    color: #9ca3af !important;
+    text-align: center !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
-/* ── BADGE CHIPS ─────────────────────────────────────────────────────────── */
+/* badge chỉ dùng cho platform tag trong section header */
 .badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 4px;
-    letter-spacing: 0.3px; margin-bottom: 8px;
-    font-family: 'JetBrains Mono', monospace;
-}
-.badge-required {
-    background: #111; color: #fff;
-}
-.badge-optional {
-    background: #f0f0f0; color: #888;
-    border: 1px solid #e5e5e5;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 6px;
+    letter-spacing: 0.2px;
+    font-family: 'Inter', sans-serif;
+    vertical-align: middle;
+    margin-left: 4px;
 }
 .badge-tiktok {
-    background: #000; color: #fff;
+    background: #1a1a2e; color: #fff;
 }
 .badge-shopee {
-    background: #ee4d2d14; color: #c0310d;
-    border: 1px solid #ee4d2d22;
+    background: rgba(238,77,45,0.10); color: #dd4a1f;
+    border: 1px solid rgba(238,77,45,0.20);
 }
 
-/* ── METRIC GRID ─────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   METRIC CARDS
+════════════════════════════════════════════════════════════ */
 .os-metrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 14px;
     margin: 20px 0;
 }
 .os-metric {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    padding: 20px 22px;
-    position: relative;
-    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid rgba(99,102,241,0.10);
+    border-radius: 18px;
+    padding: 22px 24px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.os-metric:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99,102,241,0.12);
 }
 .os-metric::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: #111;
-    opacity: 0.08;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #6366f1, #818cf8, #a5b4fc);
+    border-radius: 18px 18px 0 0;
+}
+.os-metric-icon {
+    width: 36px; height: 36px;
+    background: rgba(99,102,241,0.10);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; margin-bottom: 14px;
 }
 .os-metric-label {
-    font-size: 10px; font-weight: 600;
-    color: #aaa; text-transform: uppercase;
-    letter-spacing: 0.7px; margin-bottom: 12px;
+    font-size: 12px; font-weight: 600;
+    color: #6b7280; text-transform: uppercase;
+    letter-spacing: 0.6px; margin-bottom: 8px;
 }
 .os-metric-value {
-    font-size: 36px; font-weight: 700;
-    color: #111; letter-spacing: -2px;
-    line-height: 1; margin-bottom: 4px;
+    font-size: 42px; font-weight: 800;
+    color: #1a1a2e; letter-spacing: -2px;
+    line-height: 1; margin-bottom: 6px;
     font-variant-numeric: tabular-nums;
 }
 .os-metric-note {
-    font-size: 11px; color: #bbb; font-weight: 400;
+    font-size: 13px; color: #9ca3af; font-weight: 400;
 }
 
-/* ── DEDUP BLOCK ─────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   DEDUP BLOCK
+════════════════════════════════════════════════════════════ */
 .os-dedup {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    padding: 16px 20px;
+    background: #ffffff;
+    border: 1.5px solid rgba(99,102,241,0.12);
+    border-radius: 16px;
+    padding: 18px 22px;
     display: flex; align-items: center; gap: 20px;
-    margin: 12px 0 20px;
+    margin: 14px 0 22px;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.06);
 }
 .os-dedup.has-removed {
-    border-left: 3px solid #f59e0b;
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #fff 40%);
 }
 .os-dedup.no-removed {
-    border-left: 3px solid #22c55e;
+    border-left: 4px solid #22c55e;
+    background: linear-gradient(135deg, #f0fdf4 0%, #fff 40%);
 }
-.os-dedup-icon { font-size: 22px; flex-shrink: 0; }
+.os-dedup-icon { font-size: 24px; flex-shrink: 0; }
 .os-dedup-body { flex: 1; }
 .os-dedup-title {
-    font-size: 13px; font-weight: 600; color: #111;
-    margin-bottom: 6px;
+    font-size: 15px; font-weight: 700; color: #1a1a2e;
+    margin-bottom: 8px;
 }
 .os-dedup-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .os-dedup-pill {
-    font-size: 11px; font-weight: 500;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 2px 8px; border-radius: 4px;
-    background: #f5f5f5; color: #666;
+    font-size: 12px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    padding: 4px 12px; border-radius: 100px;
+    background: #f0f2fa; color: #6b7280;
 }
 .os-dedup-pill.removed { background: #fef3c7; color: #b45309; }
-.os-dedup-pill.kept { background: #f0fdf4; color: #16a34a; }
+.os-dedup-pill.kept    { background: #dcfce7; color: #16a34a; }
 .os-dedup-count {
     text-align: right; flex-shrink: 0;
-    font-size: 28px; font-weight: 700;
-    letter-spacing: -1px;
+    font-size: 36px; font-weight: 800;
+    letter-spacing: -1.5px;
     font-variant-numeric: tabular-nums;
 }
 .os-dedup-count.warn { color: #f59e0b; }
-.os-dedup-count.ok { color: #22c55e; }
+.os-dedup-count.ok   { color: #22c55e; }
 .os-dedup-count-lbl {
-    font-size: 10px; color: #bbb;
-    margin-top: 2px; text-align: right;
+    font-size: 12px; color: #9ca3af;
+    margin-top: 2px; text-align: right; font-weight: 500;
 }
 
-/* ── SKU ROW ─────────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   SKU HEADER ROW
+════════════════════════════════════════════════════════════ */
 .os-sku-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    margin: 20px 0 4px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 12px;
+    margin: 22px 0 6px;
+    box-shadow: 0 1px 6px rgba(99,102,241,0.06);
 }
 .os-sku-left { display: flex; align-items: center; gap: 10px; }
 .os-sku-code {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; font-weight: 500;
-    color: #111;
-    background: #f5f5f5;
-    padding: 3px 8px; border-radius: 4px;
-    letter-spacing: 0.2px;
+    font-size: 13px; font-weight: 600;
+    color: #6366f1;
+    background: rgba(99,102,241,0.10);
+    padding: 5px 12px; border-radius: 8px;
+    letter-spacing: 0.3px;
 }
-.os-sku-label { font-size: 12px; color: #aaa; font-weight: 400; }
+.os-sku-label { font-size: 13px; color: #9ca3af; font-weight: 400; }
 .os-sku-total {
-    font-size: 14px; font-weight: 700;
-    color: #111; letter-spacing: -0.5px;
+    font-size: 16px; font-weight: 800;
+    color: #1a1a2e; letter-spacing: -0.5px;
     font-variant-numeric: tabular-nums;
 }
 
-/* ── DOWNLOAD BUTTON ─────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   DOWNLOAD BUTTON
+════════════════════════════════════════════════════════════ */
 .stDownloadButton > button {
-    background: #111 !important;
+    background: linear-gradient(135deg, #6366f1, #818cf8) !important;
     color: #fff !important;
     border: none !important;
-    border-radius: 8px !important;
-    padding: 12px 28px !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
+    border-radius: 14px !important;
+    padding: 14px 28px !important;
+    font-weight: 700 !important;
+    font-size: 13.5px !important;
     letter-spacing: 0.1px !important;
     font-family: 'Inter', sans-serif !important;
-    box-shadow: none !important;
-    transition: opacity 0.15s, transform 0.1s !important;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.35) !important;
+    transition: all 0.2s cubic-bezier(.34,1.56,.64,1) !important;
     width: 100% !important;
 }
 .stDownloadButton > button:hover {
-    opacity: 0.85 !important;
-    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 30px rgba(99,102,241,0.50) !important;
+    transform: translateY(-2px) !important;
 }
 .stDownloadButton > button:active {
-    opacity: 1 !important;
     transform: translateY(0) !important;
+    box-shadow: 0 2px 10px rgba(99,102,241,0.30) !important;
 }
 
-/* ── DOWNLOAD WRAPPER ────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   DOWNLOAD WRAPPER
+════════════════════════════════════════════════════════════ */
 .os-dl-wrap {
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    padding: 16px;
-    background: #fff;
+    border: 1.5px solid rgba(99,102,241,0.15);
+    border-radius: 18px;
+    padding: 20px;
+    background: #ffffff;
     margin: 20px 0;
+    box-shadow: 0 2px 16px rgba(99,102,241,0.08);
 }
 .os-dl-meta {
     display: flex; align-items: center; justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid #f0f2fa;
 }
 .os-dl-filename {
-    font-size: 11px; color: #bbb;
+    font-size: 12px; color: #9ca3af;
     font-family: 'JetBrains Mono', monospace;
 }
 .os-dl-stats {
-    font-size: 11px; color: #aaa; font-weight: 500;
+    font-size: 13px; color: #6b7280; font-weight: 500;
 }
 
-/* ── EMPTY STATE ─────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   EMPTY STATE
+════════════════════════════════════════════════════════════ */
 .os-empty {
     text-align: center;
-    padding: 64px 32px;
-    border: 1px dashed #e0e0e0;
-    border-radius: 12px;
-    background: #fff;
-    margin: 12px 0 32px;
+    padding: 72px 32px;
+    border: 1.5px solid rgba(99,102,241,0.12);
+    border-radius: 24px;
+    background: #ffffff;
+    margin: 14px 0 36px;
+    box-shadow: 0 4px 24px rgba(99,102,241,0.08);
 }
 .os-empty-icon {
-    font-size: 32px; margin-bottom: 16px; display: block; opacity: 0.4;
+    font-size: 40px; margin-bottom: 18px; display: block;
+    animation: emptyFloat 3s ease-in-out infinite;
+}
+@keyframes emptyFloat {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
 }
 .os-empty-title {
-    font-size: 16px; font-weight: 600; color: #111;
-    margin-bottom: 8px; letter-spacing: -0.3px;
+    font-size: 20px; font-weight: 800; color: #1a1a2e;
+    margin-bottom: 12px; letter-spacing: -0.5px;
 }
 .os-empty-sub {
-    font-size: 13px; color: #bbb;
-    max-width: 340px; margin: 0 auto 32px;
-    line-height: 1.7; font-weight: 400;
+    font-size: 15px; color: #9ca3af;
+    max-width: 400px; margin: 0 auto 36px;
+    line-height: 1.75; font-weight: 400;
 }
 .os-steps-row {
     display: flex; align-items: flex-start;
@@ -360,53 +415,143 @@ html { -webkit-font-smoothing: antialiased; }
 }
 .os-step-item {
     display: flex; flex-direction: column; align-items: center;
-    gap: 8px; padding: 0 24px;
+    gap: 8px; padding: 0 22px;
     position: relative;
 }
 .os-step-item:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 16px; right: -1px;
-    width: 2px; height: 2px;
-    background: #d0d0d0;
-    border-radius: 50%;
+    top: 16px; right: -2px;
+    width: 30px; height: 2px;
+    background: linear-gradient(90deg, rgba(99,102,241,0.4), rgba(99,102,241,0.2));
+    border-radius: 1px;
 }
 .os-step-num {
-    width: 32px; height: 32px;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px; background: #ffffff;
+    width: 34px; height: 34px;
+    background: rgba(99,102,241,0.10);
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; color: #999;
+    font-size: 13px; font-weight: 700; color: #6366f1;
     font-family: 'JetBrains Mono', monospace;
+    border: 1.5px solid rgba(99,102,241,0.20);
 }
 .os-step-txt {
-    font-size: 11px; color: #bbb; font-weight: 500;
+    font-size: 12px; color: #9ca3af; font-weight: 500;
     white-space: nowrap;
 }
 
-/* ── UPLOAD NOTE ─────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   UPLOAD NOTE
+════════════════════════════════════════════════════════════ */
 .os-note {
-    background: #fafafa;
-    border: 1px solid #efefef;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 12px; color: #999;
-    margin-top: 12px; line-height: 1.6;
+    font-size: 13px; color: #9ca3af;
+    margin-top: 12px; line-height: 1.7;
+    padding: 2px 4px;
 }
-.os-note strong { color: #666; font-weight: 600; }
+.os-note strong { color: #6366f1; font-weight: 600; }
+.os-note::before { content: 'ℹ️  '; }
 
-/* ── DIVIDER ─────────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   DIVIDER
+════════════════════════════════════════════════════════════ */
 .os-divider {
-    height: 1px; background: #efefef; margin: 28px 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99,102,241,0.20), transparent);
+    margin: 32px 0;
 }
 
-/* ── DATAFRAME ───────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   DATAFRAME
+════════════════════════════════════════════════════════════ */
 .stDataFrame {
-    border: 1px solid #e5e5e5 !important;
-    border-radius: 8px !important;
+    border: 1px solid rgba(99,102,241,0.12) !important;
+    border-radius: 12px !important;
     overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.06) !important;
 }
-iframe { border-radius: 8px; }
+iframe { border-radius: 12px; }
+
+/* ════════════════════════════════════════════════════════════
+   SECTION TAG
+════════════════════════════════════════════════════════════ */
+.os-section-tag {
+    font-size: 10px; font-weight: 700;
+    color: #6366f1;
+    background: rgba(99,102,241,0.08);
+    padding: 3px 10px; border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: auto;
+}
+.os-section-sep { flex: 1; }
+
+/* ════════════════════════════════════════════════════════════
+   FILE UPLOADER — VIETNAMESE OVERRIDE
+════════════════════════════════════════════════════════════ */
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    visibility: hidden;
+    position: relative;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] * {
+    display: none !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"]::before {
+    content: 'Kéo thả file vào đây\A Giới hạn 200MB · CSV, XLSX';
+    visibility: visible;
+    display: block !important;
+    white-space: pre-line;
+    font-size: 13px; color: #9ca3af; font-weight: 400;
+    text-align: center;
+    line-height: 1.8;
+}
+[data-testid="stFileUploaderDropzone"] button {
+    font-size: 0 !important;
+    min-width: 120px;
+    padding: 8px 20px !important;
+    border-radius: 10px !important;
+    border: 1.5px solid #e5e8f4 !important;
+    background: #fff !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer;
+}
+[data-testid="stFileUploaderDropzone"] button:hover {
+    border-color: #a5b4fc !important;
+    background: rgba(99,102,241,0.04) !important;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.10) !important;
+}
+[data-testid="stFileUploaderDropzone"] button::after {
+    content: 'Chọn file' !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    color: #6366f1 !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SECTION NUMBER HOVER
+════════════════════════════════════════════════════════════ */
+.os-section-num {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.os-section:hover .os-section-num {
+    transform: scale(1.08);
+    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .os-topbar { flex-wrap: wrap; gap: 12px; }
+    .os-topbar-status { margin-left: auto; }
+    .os-metrics { grid-template-columns: 1fr; }
+    .os-dedup { flex-direction: column; text-align: center; }
+    .os-dedup-count { text-align: center; }
+    .os-dedup-count-lbl { text-align: center; }
+    .os-steps-row { flex-wrap: wrap; gap: 12px; }
+    .os-step-item:not(:last-child)::after { display: none; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -641,20 +786,19 @@ def export_to_word(detail_summary, total_orders, total_items, shop_name="TITIKID
     return target.getvalue()
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  HEADER
+#  TIÊU ĐỀ
 # ══════════════════════════════════════════════════════════════════════════════
 st.markdown('''
-<div class="os-header">
-    <div class="os-wordmark">
-        <div class="os-logo">OS</div>
+<div class="os-topbar">
+    <div class="os-topbar-brand">
+        <div class="os-topbar-logo">📦</div>
         <div>
-            <div class="os-title">Order Studio</div>
-            <div class="os-sub">Tổng hợp · Lọc trùng · Xuất soạn hàng</div>
+            <div class="os-topbar-name">Xử lý đơn hàng</div>
+            <div class="os-topbar-sub">TikTok &amp; Shopee · Tổng hợp · Lọc trùng · Xuất Word</div>
         </div>
     </div>
-    <div class="os-status">
-        <div class="os-status-dot"></div>
-        Ready
+    <div class="os-topbar-status">
+        <span class="os-status-dot"></span> Sẵn sàng
     </div>
 </div>
 ''', unsafe_allow_html=True)
@@ -666,21 +810,21 @@ st.markdown('''
 <div class="os-section">
     <span class="os-section-num">01</span>
     <span class="os-section-title">Cài đặt</span>
-    <span class="os-section-sep"></span>
-    <span class="os-section-tag">SETUP</span>
 </div>
 ''', unsafe_allow_html=True)
+
 
 current_hour = datetime.now().hour
 default_shift_index = 0 if current_hour < 12 else 1
 
 col_s1, col_s2, col_s3 = st.columns(3)
 with col_s1:
-    shop_name = st.selectbox("Tên Shop", ["TITIKID", "GIMME"], key="shop_name")
+    shop_name = st.selectbox("Tên shop", ["TITIKID", "GIMME"], key="shop_name")
 with col_s2:
     platform = st.selectbox("Sàn bán hàng", ["TIKTOK", "SHOPEE"], key="platform")
 with col_s3:
     shift = st.selectbox("Ca làm việc", ["SÁNG", "CHIỀU"], index=default_shift_index, key="shift")
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  02 — UPLOAD FILE
@@ -692,37 +836,33 @@ platform_badge = (
 )
 
 st.markdown(f'''
-<div class="os-section" style="margin-top: 28px;">
+<div class="os-section" style="margin-top: 20px;">
     <span class="os-section-num">02</span>
-    <span class="os-section-title">Upload file {platform_badge}</span>
-    <span class="os-section-sep"></span>
-    <span class="os-section-tag">IMPORT</span>
+    <span class="os-section-title">Tải file đơn hàng {platform_badge}</span>
 </div>
 ''', unsafe_allow_html=True)
 
 col_f1, col_f2 = st.columns(2)
 with col_f1:
-    st.markdown('<span class="badge badge-required">● Required</span>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
-        f"File ca hiện tại — {platform}",
+        f"📄 File ca hiện tại ({platform}) · Bắt buộc",
         type=["csv", "xlsx"],
         key="file_current",
         help="File đơn hàng ca này cần tổng hợp"
     )
 with col_f2:
-    st.markdown('<span class="badge badge-optional">○ Optional</span>', unsafe_allow_html=True)
     prev_file = st.file_uploader(
-        "File ca trước — Lọc trùng Order ID",
+        "📂 File ca trước · Tùy chọn (lọc đơn trùng)",
         type=["csv", "xlsx"],
         key="file_prev",
-        help="Upload để loại bỏ đơn đã soạn ở ca trước"
+        help="Tải lên để loại bỏ đơn đã soạn ở ca trước"
     )
 
 st.markdown('''
-<div class="os-note">
-    Chỉ cần <strong>file ca hiện tại</strong> là đủ để xuất báo cáo.
-    File ca trước chỉ dùng khi muốn <strong>lọc bỏ đơn trùng</strong> giữa 2 ca.
-</div>
+<p class="os-note">
+    Chỉ cần <strong>file ca hiện tại</strong> là đủ để tổng hợp và xuất Word.
+    Muốn <strong>lọc đơn trùng</strong> thì tải thêm file ca trước.
+</p>
 ''', unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -733,21 +873,19 @@ if not uploaded_file:
     <div class="os-section" style="margin-top:28px;">
         <span class="os-section-num">03</span>
         <span class="os-section-title">Kết quả</span>
-        <span class="os-section-sep"></span>
-        <span class="os-section-tag">OUTPUT</span>
     </div>
     <div class="os-empty">
-        <span class="os-empty-icon">◈</span>
+        <span class="os-empty-icon">📂</span>
         <div class="os-empty-title">Chưa có dữ liệu</div>
-        <div class="os-empty-sub">Upload file đơn hàng phía trên để bắt đầu tổng hợp, lọc trùng và xuất file Word soạn hàng.</div>
+        <div class="os-empty-sub">Tải lên file đơn hàng phía trên để bắt đầu tổng hợp, lọc trùng và xuất file Word soạn hàng.</div>
         <div class="os-steps-row">
             <div class="os-step-item">
                 <div class="os-step-num">1</div>
-                <div class="os-step-txt">Chọn shop & sàn</div>
+                <div class="os-step-txt">Chọn cửa hàng</div>
             </div>
             <div class="os-step-item">
                 <div class="os-step-num">2</div>
-                <div class="os-step-txt">Upload CSV / XLSX</div>
+                <div class="os-step-txt">Tải file lên</div>
             </div>
             <div class="os-step-item">
                 <div class="os-step-num">3</div>
@@ -790,13 +928,13 @@ else:
         removed_count = 0
         prev_total    = 0
 
-        # ── Section 03 label ─────────────────────────────────────────────────
+        # ── Nhãn mục 03 ─────────────────────────────────────────────────
         st.markdown('''
         <div class="os-section" style="margin-top:28px;">
             <span class="os-section-num">03</span>
             <span class="os-section-title">Kết quả</span>
             <span class="os-section-sep"></span>
-            <span class="os-section-tag">OUTPUT</span>
+            <span class="os-section-tag">xuất dữ liệu</span>
         </div>
         ''', unsafe_allow_html=True)
 
@@ -876,16 +1014,19 @@ else:
         st.markdown(f'''
         <div class="os-metrics">
             <div class="os-metric">
+                <div class="os-metric-icon">📦</div>
                 <div class="os-metric-label">Tổng đơn hàng</div>
                 <div class="os-metric-value">{total_orders}</div>
                 <div class="os-metric-note">{dedup_note}</div>
             </div>
             <div class="os-metric">
+                <div class="os-metric-icon">👕</div>
                 <div class="os-metric-label">Tổng sản phẩm</div>
                 <div class="os-metric-value">{total_items}</div>
                 <div class="os-metric-note">tổng số lượng áo</div>
             </div>
             <div class="os-metric">
+                <div class="os-metric-icon">🏷️</div>
                 <div class="os-metric-label">Loại SKU</div>
                 <div class="os-metric-value">{unique_skus_count}</div>
                 <div class="os-metric-note">mã sản phẩm khác nhau</div>
@@ -900,7 +1041,7 @@ else:
 
         st.markdown('<div class="os-dl-wrap">', unsafe_allow_html=True)
         st.download_button(
-            f"↓  Tải file Word soạn hàng  —  {total_orders} đơn · {total_items} áo",
+            f"⬇️  Tải xuống phiếu soạn hàng  —  {total_orders} đơn · {total_items} áo",
             word_data,
             word_filename,
             use_container_width=True
@@ -908,7 +1049,7 @@ else:
         st.markdown(f'''
             <div class="os-dl-meta">
                 <span class="os-dl-filename">{word_filename}</span>
-                <span class="os-dl-stats">{total_orders} orders · {total_items} items · {unique_skus_count} SKUs</span>
+                <span class="os-dl-stats">{total_orders} đơn · {total_items} sản phẩm · {unique_skus_count} mã SKU</span>
             </div>
         </div>''', unsafe_allow_html=True)
 
