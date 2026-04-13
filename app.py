@@ -10,293 +10,405 @@ from docx.oxml import OxmlElement
 import io
 from datetime import datetime
 
-# ─── CẤU HÌNH TRANG ───────────────────────────────────────────────────────────
-st.set_page_config(page_title="Warehouse Pro", page_icon="📦", layout="wide")
+# ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
+st.set_page_config(page_title="Order Studio", page_icon="◈", layout="wide")
 
+# ─── GLOBAL STYLES — 2026 Minimalism ──────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── Reset & Base ── */
-*, *::before, *::after { box-sizing: border-box; }
-.stApp { font-family: 'Inter', sans-serif; }
+/* ── BASE ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+.stApp { font-family: 'Inter', system-ui, sans-serif; background: #fafafa; }
 #MainMenu, footer, header { visibility: hidden; }
-.block-container { padding-top: 1.6rem; padding-bottom: 2.5rem; max-width: 980px; }
-
-/* ── HEADER ─────────────────────────────────────────────────────────────── */
-.app-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 28px; padding-bottom: 22px;
-    border-bottom: 1px solid rgba(128,128,128,0.12);
+.block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 4rem !important;
+    max-width: 900px !important;
 }
-.app-header-left { display: flex; align-items: center; gap: 14px; }
-.app-header-icon {
-    width: 48px; height: 48px; border-radius: 14px;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+
+/* ── HEADER ──────────────────────────────────────────────────────────────── */
+.os-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.os-wordmark {
+    display: flex; align-items: center; gap: 12px;
+}
+.os-logo {
+    width: 36px; height: 36px;
+    background: #111;
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px; flex-shrink: 0;
-    box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    font-size: 16px; color: #fff; font-weight: 700;
+    letter-spacing: -1px; font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
 }
-.app-header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; margin: 0 0 2px; }
-.app-header-sub { font-size: 12.5px; color: rgba(128,128,128,0.6); margin: 0; }
-.app-header-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
-    color: #6366f1; font-size: 11px; font-weight: 700;
-    padding: 4px 12px; border-radius: 20px; letter-spacing: 0.4px;
+.os-title {
+    font-size: 17px; font-weight: 600;
+    color: #111; letter-spacing: -0.3px;
+    margin-bottom: 2px;
+}
+.os-sub {
+    font-size: 12px; color: #999; font-weight: 400;
+}
+.os-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 500; color: #666;
+    padding: 5px 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    background: #fff;
+}
+.os-status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
-/* ── STEP SYSTEM ─────────────────────────────────────────────────────────── */
-.step-row {
+/* ── SECTION LABEL ───────────────────────────────────────────────────────── */
+.os-section {
     display: flex; align-items: center; gap: 10px;
-    margin: 22px 0 12px;
+    margin: 32px 0 16px;
 }
-.step-circle {
-    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white; font-size: 12px; font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+.os-section-num {
+    font-size: 10px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: #aaa; letter-spacing: 0.5px;
+    min-width: 20px;
 }
-.step-label { font-size: 13.5px; font-weight: 700; letter-spacing: -0.1px; }
-.step-hint {
-    font-size: 11.5px; color: rgba(128,128,128,0.55);
-    margin-left: 4px;
+.os-section-title {
+    font-size: 13px; font-weight: 600; color: #111;
+    letter-spacing: -0.1px;
 }
-.step-line {
-    height: 1px; background: rgba(128,128,128,0.1); margin: 0 0 14px;
+.os-section-sep {
+    flex: 1; height: 1px; background: #e8e8e8;
 }
-
-/* ── METRIC CARDS ────────────────────────────────────────────────────────── */
-.metric-row {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px; margin: 4px 0 18px;
-}
-.metric-card {
-    border-radius: 14px; padding: 18px 20px;
-    border: 1px solid rgba(128,128,128,0.1);
-    background: rgba(128,128,128,0.03);
-    position: relative; overflow: hidden;
-    transition: transform 0.15s, box-shadow 0.15s;
-}
-.metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
-}
-.metric-card::after {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    border-radius: 14px 14px 0 0;
-}
-.metric-card.c-indigo::after { background: linear-gradient(90deg,#6366f1,#818cf8); }
-.metric-card.c-emerald::after { background: linear-gradient(90deg,#10b981,#34d399); }
-.metric-card.c-amber::after { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
-.metric-icon {
-    font-size: 20px; margin-bottom: 10px; display: block;
-    opacity: 0.85;
-}
-.metric-label {
-    font-size: 10.5px; color: rgba(128,128,128,0.6);
-    text-transform: uppercase; letter-spacing: 1px;
-    font-weight: 700; margin-bottom: 5px;
-}
-.metric-value {
-    font-size: 32px; font-weight: 800; letter-spacing: -1px;
-    margin: 0; line-height: 1;
-}
-.metric-sub {
-    font-size: 11px; color: rgba(128,128,128,0.5);
-    margin: 5px 0 0;
+.os-section-tag {
+    font-size: 10px; font-weight: 500; color: #bbb;
+    font-family: 'JetBrains Mono', monospace;
 }
 
-/* ── DEDUP BANNER ────────────────────────────────────────────────────────── */
-.dedup-wrap {
-    border-radius: 14px; padding: 16px 20px;
-    margin: 4px 0 18px;
-    display: flex; align-items: center; gap: 16px;
-}
-.dedup-wrap.warn {
-    border: 1px solid rgba(245,158,11,0.25);
-    background: rgba(245,158,11,0.06);
-}
-.dedup-wrap.ok {
-    border: 1px solid rgba(16,185,129,0.25);
-    background: rgba(16,185,129,0.06);
-}
-.dedup-icon { font-size: 28px; flex-shrink: 0; }
-.dedup-body { flex: 1; min-width: 0; }
-.dedup-title { font-size: 14px; font-weight: 700; margin: 0 0 5px; }
-.dedup-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-.dedup-pill {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11.5px; font-weight: 600;
-    padding: 3px 10px; border-radius: 20px;
-    background: rgba(128,128,128,0.08);
-    color: rgba(128,128,128,0.75);
-}
-.dedup-pill.removed { background: rgba(245,158,11,0.12); color: #d97706; }
-.dedup-pill.kept { background: rgba(99,102,241,0.1); color: #6366f1; }
-.dedup-stat-block { text-align: right; flex-shrink: 0; }
-.dedup-stat-num { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
-.dedup-stat-lbl { font-size: 10.5px; color: rgba(128,128,128,0.55); margin-top: 2px; }
-
-/* ── SKU SECTION ─────────────────────────────────────────────────────────── */
-.sku-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px; margin: 18px 0 6px;
+/* ── CARD BASE ───────────────────────────────────────────────────────────── */
+.os-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
     border-radius: 10px;
-    background: rgba(99,102,241,0.06);
-    border: 1px solid rgba(99,102,241,0.12);
-    border-left: 4px solid #6366f1;
+    padding: 20px;
 }
-.sku-header-left { display: flex; align-items: center; gap: 10px; }
-.sku-tag {
-    background: linear-gradient(135deg,#6366f1,#8b5cf6);
-    color: white; font-size: 11px; font-weight: 700;
-    padding: 3px 10px; border-radius: 6px;
-    letter-spacing: 0.3px;
+
+/* ── SETTINGS GRID ───────────────────────────────────────────────────────── */
+.stSelectbox > div > div {
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 13px !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: border-color 0.15s !important;
 }
-.sku-name-label { font-size: 13.5px; font-weight: 600; }
-.sku-total {
-    font-size: 14px; font-weight: 800;
-    color: #6366f1; letter-spacing: -0.3px;
+.stSelectbox > div > div:hover {
+    border-color: #bbb !important;
+}
+.stSelectbox > div > div:focus-within {
+    border-color: #111 !important;
+    box-shadow: none !important;
+}
+.stSelectbox label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #999 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+    margin-bottom: 6px !important;
+}
+
+/* ── FILE UPLOADER ───────────────────────────────────────────────────────── */
+[data-testid="stFileUploader"] {
+    background: #fff;
+    border: 1px dashed #ddd;
+    border-radius: 10px;
+    padding: 4px;
+    transition: border-color 0.2s;
+}
+[data-testid="stFileUploader"]:hover {
+    border-color: #aaa;
+}
+[data-testid="stFileUploader"] label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #888 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+}
+[data-testid="stFileUploaderDropzone"] {
+    border: none !important;
+    background: transparent !important;
+    padding: 12px 16px !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    font-size: 12px !important;
+    color: #aaa !important;
+}
+
+/* ── BADGE CHIPS ─────────────────────────────────────────────────────────── */
+.badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px;
+    letter-spacing: 0.3px; margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.badge-required {
+    background: #111; color: #fff;
+}
+.badge-optional {
+    background: #f0f0f0; color: #888;
+    border: 1px solid #e5e5e5;
+}
+.badge-tiktok {
+    background: #000; color: #fff;
+}
+.badge-shopee {
+    background: #ee4d2d14; color: #c0310d;
+    border: 1px solid #ee4d2d22;
+}
+
+/* ── METRIC GRID ─────────────────────────────────────────────────────────── */
+.os-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+.os-metric {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+}
+.os-metric::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: #111;
+    opacity: 0.08;
+}
+.os-metric-label {
+    font-size: 10px; font-weight: 600;
+    color: #aaa; text-transform: uppercase;
+    letter-spacing: 0.7px; margin-bottom: 12px;
+}
+.os-metric-value {
+    font-size: 36px; font-weight: 700;
+    color: #111; letter-spacing: -2px;
+    line-height: 1; margin-bottom: 4px;
+    font-variant-numeric: tabular-nums;
+}
+.os-metric-note {
+    font-size: 11px; color: #bbb; font-weight: 400;
+}
+
+/* ── DEDUP BLOCK ─────────────────────────────────────────────────────────── */
+.os-dedup {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 20px;
+    margin: 12px 0 20px;
+}
+.os-dedup.has-removed {
+    border-left: 3px solid #f59e0b;
+}
+.os-dedup.no-removed {
+    border-left: 3px solid #22c55e;
+}
+.os-dedup-icon { font-size: 22px; flex-shrink: 0; }
+.os-dedup-body { flex: 1; }
+.os-dedup-title {
+    font-size: 13px; font-weight: 600; color: #111;
+    margin-bottom: 6px;
+}
+.os-dedup-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.os-dedup-pill {
+    font-size: 11px; font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 8px; border-radius: 4px;
+    background: #f5f5f5; color: #666;
+}
+.os-dedup-pill.removed { background: #fef3c7; color: #b45309; }
+.os-dedup-pill.kept { background: #f0fdf4; color: #16a34a; }
+.os-dedup-count {
+    text-align: right; flex-shrink: 0;
+    font-size: 28px; font-weight: 700;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+.os-dedup-count.warn { color: #f59e0b; }
+.os-dedup-count.ok { color: #22c55e; }
+.os-dedup-count-lbl {
+    font-size: 10px; color: #bbb;
+    margin-top: 2px; text-align: right;
+}
+
+/* ── SKU ROW ─────────────────────────────────────────────────────────────── */
+.os-sku-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    margin: 20px 0 4px;
+}
+.os-sku-left { display: flex; align-items: center; gap: 10px; }
+.os-sku-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    color: #111;
+    background: #f5f5f5;
+    padding: 3px 8px; border-radius: 4px;
+    letter-spacing: 0.2px;
+}
+.os-sku-label { font-size: 12px; color: #aaa; font-weight: 400; }
+.os-sku-total {
+    font-size: 14px; font-weight: 700;
+    color: #111; letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
 }
 
 /* ── DOWNLOAD BUTTON ─────────────────────────────────────────────────────── */
 .stDownloadButton > button {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
-    color: white !important; border: none !important;
-    border-radius: 12px !important;
-    padding: 13px 32px !important; font-weight: 700 !important;
-    font-size: 14.5px !important; letter-spacing: 0.2px !important;
-    box-shadow: 0 4px 18px rgba(99,102,241,0.4) !important;
-    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s !important;
+    background: #111 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.1px !important;
+    font-family: 'Inter', sans-serif !important;
+    box-shadow: none !important;
+    transition: opacity 0.15s, transform 0.1s !important;
     width: 100% !important;
 }
 .stDownloadButton > button:hover {
-    opacity: 0.92 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(99,102,241,0.45) !important;
+    opacity: 0.85 !important;
+    transform: translateY(-1px) !important;
 }
-.stDownloadButton > button:active { transform: translateY(0) !important; }
+.stDownloadButton > button:active {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
 
-/* ── CTA WRAP ────────────────────────────────────────────────────────────── */
-.cta-wrap {
-    border-radius: 14px; padding: 18px 20px;
-    border: 1px solid rgba(99,102,241,0.15);
-    background: rgba(99,102,241,0.04);
-    margin-bottom: 20px;
+/* ── DOWNLOAD WRAPPER ────────────────────────────────────────────────────── */
+.os-dl-wrap {
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 16px;
+    background: #fff;
+    margin: 20px 0;
 }
-.cta-info {
-    font-size: 12px; color: rgba(128,128,128,0.6);
-    margin: 8px 0 0; text-align: center;
+.os-dl-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 10px;
+}
+.os-dl-filename {
+    font-size: 11px; color: #bbb;
+    font-family: 'JetBrains Mono', monospace;
+}
+.os-dl-stats {
+    font-size: 11px; color: #aaa; font-weight: 500;
 }
 
 /* ── EMPTY STATE ─────────────────────────────────────────────────────────── */
-.empty-state {
-    text-align: center; padding: 52px 24px 44px;
-    border-radius: 18px;
-    border: 2px dashed rgba(128,128,128,0.13);
-    margin: 8px 0 24px;
-    background: rgba(128,128,128,0.02);
+.os-empty {
+    text-align: center;
+    padding: 64px 32px;
+    border: 1px dashed #e0e0e0;
+    border-radius: 12px;
+    background: #fff;
+    margin: 12px 0 32px;
 }
-.empty-icon { font-size: 52px; display: block; margin-bottom: 14px; }
-.empty-title { font-size: 18px; font-weight: 800; margin: 0 0 8px; }
-.empty-sub {
-    font-size: 13px; color: rgba(128,128,128,0.6);
-    max-width: 380px; margin: 0 auto 28px; line-height: 1.6;
+.os-empty-icon {
+    font-size: 32px; margin-bottom: 16px; display: block; opacity: 0.4;
 }
-.empty-steps { display: flex; justify-content: center; gap: 0; flex-wrap: wrap; }
-.empty-step {
+.os-empty-title {
+    font-size: 16px; font-weight: 600; color: #111;
+    margin-bottom: 8px; letter-spacing: -0.3px;
+}
+.os-empty-sub {
+    font-size: 13px; color: #bbb;
+    max-width: 340px; margin: 0 auto 32px;
+    line-height: 1.7; font-weight: 400;
+}
+.os-steps-row {
+    display: flex; align-items: flex-start;
+    justify-content: center; gap: 0;
+}
+.os-step-item {
     display: flex; flex-direction: column; align-items: center;
-    gap: 10px; padding: 0 20px;
+    gap: 8px; padding: 0 24px;
     position: relative;
 }
-.empty-step:not(:last-child)::after {
-    content: '→';
-    position: absolute; right: -4px; top: 14px;
-    font-size: 16px; color: rgba(128,128,128,0.25); font-weight: 700;
+.os-step-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px; right: -1px;
+    width: 2px; height: 2px;
+    background: #d0d0d0;
+    border-radius: 50%;
 }
-.empty-step-icon {
-    width: 52px; height: 52px; border-radius: 14px;
-    background: rgba(99,102,241,0.07);
-    border: 1px solid rgba(99,102,241,0.14);
+.os-step-num {
+    width: 32px; height: 32px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px; background: #ffffff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
+    font-size: 12px; font-weight: 600; color: #999;
+    font-family: 'JetBrains Mono', monospace;
 }
-.empty-step-label { font-size: 12px; color: rgba(128,128,128,0.6); font-weight: 600; }
-
-/* ── PLATFORM CHIP ───────────────────────────────────────────────────────── */
-.chip-tiktok {
-    display: inline-block;
-    background: rgba(255,0,80,0.08); color: #e0003d;
-    border: 1px solid rgba(255,0,80,0.18);
-    font-size: 11px; font-weight: 700;
-    padding: 2px 10px; border-radius: 20px;
-}
-.chip-shopee {
-    display: inline-block;
-    background: rgba(238,77,45,0.08); color: #c9360f;
-    border: 1px solid rgba(238,77,45,0.18);
-    font-size: 11px; font-weight: 700;
-    padding: 2px 10px; border-radius: 20px;
+.os-step-txt {
+    font-size: 11px; color: #bbb; font-weight: 500;
+    white-space: nowrap;
 }
 
-/* ── OPTIONAL BADGE ─────────────────────────────────────────────────────── */
-.upload-group { position: relative; }
-.optional-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: rgba(128,128,128,0.08);
-    border: 1px solid rgba(128,128,128,0.15);
-    color: rgba(128,128,128,0.65);
-    font-size: 10px; font-weight: 700;
-    padding: 2px 8px; border-radius: 20px;
-    letter-spacing: 0.4px; margin-bottom: 6px;
-    text-transform: uppercase;
+/* ── UPLOAD NOTE ─────────────────────────────────────────────────────────── */
+.os-note {
+    background: #fafafa;
+    border: 1px solid #efefef;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px; color: #999;
+    margin-top: 12px; line-height: 1.6;
 }
-.required-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: rgba(99,102,241,0.1);
-    border: 1px solid rgba(99,102,241,0.2);
-    color: #6366f1;
-    font-size: 10px; font-weight: 700;
-    padding: 2px 8px; border-radius: 20px;
-    letter-spacing: 0.4px; margin-bottom: 6px;
-    text-transform: uppercase;
+.os-note strong { color: #666; font-weight: 600; }
+
+/* ── DIVIDER ─────────────────────────────────────────────────────────────── */
+.os-divider {
+    height: 1px; background: #efefef; margin: 28px 0;
 }
-.upload-note {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 14px; border-radius: 10px;
-    background: rgba(128,128,128,0.04);
-    border: 1px solid rgba(128,128,128,0.09);
-    margin-top: 10px;
-    font-size: 12px; color: rgba(128,128,128,0.65);
+
+/* ── DATAFRAME ───────────────────────────────────────────────────────────── */
+.stDataFrame {
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
 }
-.upload-note .un-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #6366f1; flex-shrink: 0;
-}
-/* ── MISC ────────────────────────────────────────────────────────────────── */
-.stSelectbox label { font-weight: 600 !important; font-size: 12px !important; letter-spacing: 0.1px !important; }
-[data-testid="stFileUploader"] label { font-weight: 600 !important; font-size: 12px !important; }
-.stDataFrame { border-radius: 10px !important; }
-.divider { height: 1px; background: rgba(128,128,128,0.1); margin: 24px 0; }
+iframe { border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
-
-# ─── HEADER ───────────────────────────────────────────────────────────────────
-st.markdown('''
-<div class="app-header">
-    <div class="app-header-left">
-        <div class="app-header-icon">📦</div>
-        <div>
-            <div class="app-header-title">Warehouse Pro</div>
-            <div class="app-header-sub">Tổng hợp đơn hàng · Lọc trùng · Xuất Word soạn hàng</div>
-        </div>
-    </div>
-    <div class="app-header-badge">⚡ Tự động hoá kho</div>
-</div>
-''', unsafe_allow_html=True)
 
 # ─── HÀM TÁCH SKU ─────────────────────────────────────────────────────────────
 def parse_sku_from_col_g(val):
@@ -528,16 +640,35 @@ def export_to_word(detail_summary, total_orders, total_items, shop_name="TITIKID
     doc.save(target)
     return target.getvalue()
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  BƯỚC 1 — CÀI ĐẶT
-# ═══════════════════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════════
+#  HEADER
+# ══════════════════════════════════════════════════════════════════════════════
 st.markdown('''
-<div class="step-row">
-    <div class="step-circle">1</div>
-    <span class="step-label">Cài đặt xuất file</span>
-    <span class="step-hint">· Chọn shop, sàn bán & ca làm việc</span>
+<div class="os-header">
+    <div class="os-wordmark">
+        <div class="os-logo">OS</div>
+        <div>
+            <div class="os-title">Order Studio</div>
+            <div class="os-sub">Tổng hợp · Lọc trùng · Xuất soạn hàng</div>
+        </div>
+    </div>
+    <div class="os-status">
+        <div class="os-status-dot"></div>
+        Ready
+    </div>
 </div>
-<div class="step-line"></div>
+''', unsafe_allow_html=True)
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  01 — CÀI ĐẶT
+# ══════════════════════════════════════════════════════════════════════════════
+st.markdown('''
+<div class="os-section">
+    <span class="os-section-num">01</span>
+    <span class="os-section-title">Cài đặt</span>
+    <span class="os-section-sep"></span>
+    <span class="os-section-tag">SETUP</span>
+</div>
 ''', unsafe_allow_html=True)
 
 current_hour = datetime.now().hour
@@ -545,77 +676,86 @@ default_shift_index = 0 if current_hour < 12 else 1
 
 col_s1, col_s2, col_s3 = st.columns(3)
 with col_s1:
-    shop_name = st.selectbox("🏪 Tên Shop", ["TITIKID", "GIMME"], key="shop_name")
+    shop_name = st.selectbox("Tên Shop", ["TITIKID", "GIMME"], key="shop_name")
 with col_s2:
-    platform = st.selectbox("🛒 Sàn bán hàng", ["TIKTOK", "SHOPEE"], key="platform")
+    platform = st.selectbox("Sàn bán hàng", ["TIKTOK", "SHOPEE"], key="platform")
 with col_s3:
-    shift = st.selectbox("🕐 Ca làm việc", ["SÁNG", "CHIỀU"], index=default_shift_index, key="shift")
+    shift = st.selectbox("Ca làm việc", ["SÁNG", "CHIỀU"], index=default_shift_index, key="shift")
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  BƯỚC 2 — UPLOAD FILE
-# ═══════════════════════════════════════════════════════════════════════════════
-platform_chip = f'<span class="chip-tiktok">TikTok</span>' if platform == "TIKTOK" else f'<span class="chip-shopee">Shopee</span>'
+# ══════════════════════════════════════════════════════════════════════════════
+#  02 — UPLOAD FILE
+# ══════════════════════════════════════════════════════════════════════════════
+platform_badge = (
+    '<span class="badge badge-tiktok">TikTok</span>'
+    if platform == "TIKTOK"
+    else '<span class="badge badge-shopee">Shopee</span>'
+)
+
 st.markdown(f'''
-<div class="step-row" style="margin-top:28px">
-    <div class="step-circle">2</div>
-    <span class="step-label">Upload đơn hàng {platform_chip}</span>
-    <span class="step-hint">· File buổi trước để lọc trùng (tuỳ chọn)</span>
+<div class="os-section" style="margin-top: 28px;">
+    <span class="os-section-num">02</span>
+    <span class="os-section-title">Upload file {platform_badge}</span>
+    <span class="os-section-sep"></span>
+    <span class="os-section-tag">IMPORT</span>
 </div>
-<div class="step-line"></div>
 ''', unsafe_allow_html=True)
 
 col_f1, col_f2 = st.columns(2)
 with col_f1:
-    st.markdown('<span class="required-badge">● Bắt buộc</span>', unsafe_allow_html=True)
+    st.markdown('<span class="badge badge-required">● Required</span>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
-        f"📂 File ca hiện tại — {platform}",
+        f"File ca hiện tại — {platform}",
         type=["csv", "xlsx"],
         key="file_current",
-        help="File đơn hàng ca này cần tổng hợp và soạn hàng"
+        help="File đơn hàng ca này cần tổng hợp"
     )
 with col_f2:
-    st.markdown('<span class="optional-badge">○ Tuỳ chọn</span>', unsafe_allow_html=True)
+    st.markdown('<span class="badge badge-optional">○ Optional</span>', unsafe_allow_html=True)
     prev_file = st.file_uploader(
-        "🗂️ File ca trước — Lọc trùng Order ID",
+        "File ca trước — Lọc trùng Order ID",
         type=["csv", "xlsx"],
         key="file_prev",
-        help="Không bắt buộc. Chỉ upload khi muốn loại bỏ đơn đã soạn ở ca trước"
+        help="Upload để loại bỏ đơn đã soạn ở ca trước"
     )
 
 st.markdown('''
-<div class="upload-note">
-    <div class="un-dot"></div>
-    <span>Chỉ cần upload <strong>file ca hiện tại</strong> là đủ để xuất báo cáo.
-    File ca trước chỉ dùng khi muốn <strong>lọc bỏ đơn trùng</strong> giữa 2 ca.</span>
+<div class="os-note">
+    Chỉ cần <strong>file ca hiện tại</strong> là đủ để xuất báo cáo.
+    File ca trước chỉ dùng khi muốn <strong>lọc bỏ đơn trùng</strong> giữa 2 ca.
 </div>
 ''', unsafe_allow_html=True)
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  BƯỚC 3 — KẾT QUẢ
-# ═══════════════════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════════
+#  03 — KẾT QUẢ
+# ══════════════════════════════════════════════════════════════════════════════
 if not uploaded_file:
-    # ── Empty State ──────────────────────────────────────────────────────────
     st.markdown('''
-    <div class="empty-state">
-        <span class="empty-icon">📋</span>
-        <div class="empty-title">Chưa có dữ liệu</div>
-        <div class="empty-sub">Upload file đơn hàng ở trên để bắt đầu tổng hợp, lọc trùng và xuất file Word soạn hàng.</div>
-        <div class="empty-steps">
-            <div class="empty-step">
-                <div class="empty-step-icon">⚙️</div>
-                <div class="empty-step-label">Chọn shop & sàn</div>
+    <div class="os-section" style="margin-top:28px;">
+        <span class="os-section-num">03</span>
+        <span class="os-section-title">Kết quả</span>
+        <span class="os-section-sep"></span>
+        <span class="os-section-tag">OUTPUT</span>
+    </div>
+    <div class="os-empty">
+        <span class="os-empty-icon">◈</span>
+        <div class="os-empty-title">Chưa có dữ liệu</div>
+        <div class="os-empty-sub">Upload file đơn hàng phía trên để bắt đầu tổng hợp, lọc trùng và xuất file Word soạn hàng.</div>
+        <div class="os-steps-row">
+            <div class="os-step-item">
+                <div class="os-step-num">1</div>
+                <div class="os-step-txt">Chọn shop & sàn</div>
             </div>
-            <div class="empty-step">
-                <div class="empty-step-icon">📂</div>
-                <div class="empty-step-label">Upload file CSV / XLSX</div>
+            <div class="os-step-item">
+                <div class="os-step-num">2</div>
+                <div class="os-step-txt">Upload CSV / XLSX</div>
             </div>
-            <div class="empty-step">
-                <div class="empty-step-icon">🔁</div>
-                <div class="empty-step-label">Lọc trùng ca trước</div>
+            <div class="os-step-item">
+                <div class="os-step-num">3</div>
+                <div class="os-step-txt">Lọc trùng ca trước</div>
             </div>
-            <div class="empty-step">
-                <div class="empty-step-icon">📥</div>
-                <div class="empty-step-label">Tải Word soạn hàng</div>
+            <div class="os-step-item">
+                <div class="os-step-num">4</div>
+                <div class="os-step-txt">Tải Word soạn hàng</div>
             </div>
         </div>
     </div>
@@ -634,7 +774,7 @@ else:
         if platform == "TIKTOK":
             sku_col_index, variation_col_index, qty_col_index = 6, 8, 9
         else:
-            sku_col_index, variation_col_index, qty_col_index = 18, 19, 25
+            sku_col_index, variation_col_index, qty_col_index = 19, 20, 26
 
         max_col_needed = max(sku_col_index, variation_col_index, qty_col_index)
         if len(df.columns) <= max_col_needed:
@@ -646,20 +786,21 @@ else:
         col_qty       = df.columns[qty_col_index]
         id_col        = df.columns[0]
 
-        # ── Lọc trùng với file buổi trước ───────────────────────────────────
-        total_raw    = df[id_col].nunique()
+        total_raw     = df[id_col].nunique()
         removed_count = 0
         prev_total    = 0
 
+        # ── Section 03 label ─────────────────────────────────────────────────
         st.markdown('''
-        <div class="step-row" style="margin-top:28px">
-            <div class="step-circle">3</div>
-            <span class="step-label">Kết quả & Xuất file</span>
-            <span class="step-hint">· Dữ liệu sau khi xử lý và lọc trùng</span>
+        <div class="os-section" style="margin-top:28px;">
+            <span class="os-section-num">03</span>
+            <span class="os-section-title">Kết quả</span>
+            <span class="os-section-sep"></span>
+            <span class="os-section-tag">OUTPUT</span>
         </div>
-        <div class="step-line"></div>
         ''', unsafe_allow_html=True)
 
+        # ── Lọc trùng với file buổi trước ───────────────────────────────────
         if prev_file is not None:
             try:
                 if prev_file.name.endswith('.csv'):
@@ -680,38 +821,38 @@ else:
 
                 if removed_count > 0:
                     st.markdown(f'''
-                    <div class="dedup-wrap warn">
-                        <div class="dedup-icon">🔁</div>
-                        <div class="dedup-body">
-                            <div class="dedup-title">Đã lọc trùng với file buổi trước</div>
-                            <div class="dedup-pills">
-                                <span class="dedup-pill">📂 File hiện tại: {total_raw} đơn</span>
-                                <span class="dedup-pill">🗂️ File ca trước: {prev_total} đơn</span>
-                                <span class="dedup-pill removed">🗑️ Đã loại: {removed_count} đơn trùng</span>
-                                <span class="dedup-pill kept">✅ Còn lại: {kept_count} đơn mới</span>
+                    <div class="os-dedup has-removed">
+                        <div class="os-dedup-icon">⇄</div>
+                        <div class="os-dedup-body">
+                            <div class="os-dedup-title">Đã lọc trùng với file ca trước</div>
+                            <div class="os-dedup-pills">
+                                <span class="os-dedup-pill">Ca này: {total_raw} đơn</span>
+                                <span class="os-dedup-pill">Ca trước: {prev_total} đơn</span>
+                                <span class="os-dedup-pill removed">Loại: {removed_count} trùng</span>
+                                <span class="os-dedup-pill kept">Giữ: {kept_count} mới</span>
                             </div>
                         </div>
-                        <div class="dedup-stat-block">
-                            <div class="dedup-stat-num" style="color:#f59e0b">−{removed_count}</div>
-                            <div class="dedup-stat-lbl">đơn trùng loại bỏ</div>
+                        <div>
+                            <div class="os-dedup-count warn">−{removed_count}</div>
+                            <div class="os-dedup-count-lbl">đơn trùng</div>
                         </div>
                     </div>
                     ''', unsafe_allow_html=True)
                 else:
                     st.markdown(f'''
-                    <div class="dedup-wrap ok">
-                        <div class="dedup-icon">✅</div>
-                        <div class="dedup-body">
-                            <div class="dedup-title">Không có đơn trùng</div>
-                            <div class="dedup-pills">
-                                <span class="dedup-pill">📂 File hiện tại: {total_raw} đơn</span>
-                                <span class="dedup-pill">🗂️ File ca trước: {prev_total} đơn</span>
-                                <span class="dedup-pill kept">🎉 Tất cả đều là đơn mới</span>
+                    <div class="os-dedup no-removed">
+                        <div class="os-dedup-icon">✓</div>
+                        <div class="os-dedup-body">
+                            <div class="os-dedup-title">Không có đơn trùng</div>
+                            <div class="os-dedup-pills">
+                                <span class="os-dedup-pill">Ca này: {total_raw} đơn</span>
+                                <span class="os-dedup-pill">Ca trước: {prev_total} đơn</span>
+                                <span class="os-dedup-pill kept">Tất cả đều là đơn mới</span>
                             </div>
                         </div>
-                        <div class="dedup-stat-block">
-                            <div class="dedup-stat-num" style="color:#10b981">0</div>
-                            <div class="dedup-stat-lbl">đơn trùng</div>
+                        <div>
+                            <div class="os-dedup-count ok">0</div>
+                            <div class="os-dedup-count-lbl">đơn trùng</div>
                         </div>
                     </div>
                     ''', unsafe_allow_html=True)
@@ -733,44 +874,46 @@ else:
         # ── Metric Cards ─────────────────────────────────────────────────────
         dedup_note = f"sau khi lọc {removed_count} trùng" if removed_count > 0 else "đơn hàng duy nhất"
         st.markdown(f'''
-        <div class="metric-row">
-            <div class="metric-card c-indigo">
-                <span class="metric-icon">🛒</span>
-                <div class="metric-label">Tổng đơn hàng</div>
-                <div class="metric-value">{total_orders}</div>
-                <div class="metric-sub">{dedup_note}</div>
+        <div class="os-metrics">
+            <div class="os-metric">
+                <div class="os-metric-label">Tổng đơn hàng</div>
+                <div class="os-metric-value">{total_orders}</div>
+                <div class="os-metric-note">{dedup_note}</div>
             </div>
-            <div class="metric-card c-emerald">
-                <span class="metric-icon">👕</span>
-                <div class="metric-label">Tổng sản phẩm</div>
-                <div class="metric-value">{total_items}</div>
-                <div class="metric-sub">tổng số lượng áo</div>
+            <div class="os-metric">
+                <div class="os-metric-label">Tổng sản phẩm</div>
+                <div class="os-metric-value">{total_items}</div>
+                <div class="os-metric-note">tổng số lượng áo</div>
             </div>
-            <div class="metric-card c-amber">
-                <span class="metric-icon">🏷️</span>
-                <div class="metric-label">Loại SKU</div>
-                <div class="metric-value">{unique_skus_count}</div>
-                <div class="metric-sub">mã sản phẩm khác nhau</div>
+            <div class="os-metric">
+                <div class="os-metric-label">Loại SKU</div>
+                <div class="os-metric-value">{unique_skus_count}</div>
+                <div class="os-metric-note">mã sản phẩm khác nhau</div>
             </div>
         </div>
         ''', unsafe_allow_html=True)
 
-        # ── Nút tải Word ─────────────────────────────────────────────────────
+        # ── Download Word ─────────────────────────────────────────────────────
         current_date_file = datetime.now().strftime('%d.%m')
         word_filename = f"{shop_name}_{platform}_{shift}_{current_date_file}.docx"
         word_data = export_to_word(detail_summary, total_orders, total_items, shop_name, platform, shift)
 
-        st.markdown('<div class="cta-wrap">', unsafe_allow_html=True)
+        st.markdown('<div class="os-dl-wrap">', unsafe_allow_html=True)
         st.download_button(
-            f"📥 TẢI FILE WORD SOẠN HÀNG  —  {total_orders} đơn · {total_items} áo",
+            f"↓  Tải file Word soạn hàng  —  {total_orders} đơn · {total_items} áo",
             word_data,
             word_filename,
             use_container_width=True
         )
-        st.markdown(f'<div class="cta-info">📄 {word_filename}</div></div>', unsafe_allow_html=True)
+        st.markdown(f'''
+            <div class="os-dl-meta">
+                <span class="os-dl-filename">{word_filename}</span>
+                <span class="os-dl-stats">{total_orders} orders · {total_items} items · {unique_skus_count} SKUs</span>
+            </div>
+        </div>''', unsafe_allow_html=True)
 
-        # ── Chi tiết theo SKU ────────────────────────────────────────────────
-        st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+        # ── Chi tiết theo SKU ─────────────────────────────────────────────────
+        st.markdown('<div class="os-divider"></div>', unsafe_allow_html=True)
 
         unique_skus = detail_summary['SKU'].unique()
         for sku in unique_skus:
@@ -778,12 +921,12 @@ else:
             total_sku = int(sku_data['SL'].sum())
 
             st.markdown(f'''
-            <div class="sku-header">
-                <div class="sku-header-left">
-                    <span class="sku-tag">{sku}</span>
-                    <span class="sku-name-label">Sản phẩm</span>
+            <div class="os-sku-header">
+                <div class="os-sku-left">
+                    <span class="os-sku-code">{sku}</span>
+                    <span class="os-sku-label">sản phẩm</span>
                 </div>
-                <span class="sku-total">{total_sku} cái</span>
+                <span class="os-sku-total">{total_sku} cái</span>
             </div>
             ''', unsafe_allow_html=True)
 
@@ -792,9 +935,9 @@ else:
                 use_container_width=True,
                 hide_index=True,
                 column_config={
-                    "Phân loại": st.column_config.TextColumn("🏷️ PHÂN LOẠI / MÀU", width="large"),
-                    "Size": st.column_config.TextColumn("📏 SIZE", width="medium"),
-                    "SL": st.column_config.NumberColumn("🔢 SL", width="small", format="%d")
+                    "Phân loại": st.column_config.TextColumn("Phân loại / Màu", width="large"),
+                    "Size": st.column_config.TextColumn("Size", width="medium"),
+                    "SL": st.column_config.NumberColumn("SL", width="small", format="%d")
                 }
             )
 
