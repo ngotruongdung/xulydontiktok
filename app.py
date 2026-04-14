@@ -954,7 +954,13 @@ else:
         if platform == "TIKTOK":
             sku_col_index, variation_col_index, qty_col_index = 6, 8, 9
         else:
-            sku_col_index, variation_col_index, qty_col_index = 19, 20, 26
+            # Shopee: cột khác nhau theo shop
+            if shop_name == "GIMME":
+                # GIMME: T(19)=SKU, U(20)=Phân loại, AA(26)=Số lượng
+                sku_col_index, variation_col_index, qty_col_index = 19, 20, 26
+            else:
+                # TITIKID: S(18)=SKU, T(19)=Phân loại, Z(25)=Số lượng
+                sku_col_index, variation_col_index, qty_col_index = 18, 19, 25
 
         max_col_needed = max(sku_col_index, variation_col_index, qty_col_index)
         if len(df.columns) <= max_col_needed:
