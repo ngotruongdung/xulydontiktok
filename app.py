@@ -69,6 +69,8 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     padding-top: 1.5rem !important;
     padding-bottom: 5rem !important;
     max-width: 100% !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
     position: relative;
     z-index: 1;
 }
@@ -214,6 +216,7 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     padding: 0;
     transition: all 0.25s ease;
     margin-top: 6px !important;
+    overflow: hidden;
 }
 [data-testid="stFileUploader"]:hover {
     border-color: #c7d2fe !important;
@@ -255,7 +258,22 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     align-items: center !important;
 }
 [data-testid="stFileUploaderFile"] {
-    padding: 6px 0 !important;
+    padding: 6px 12px !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
+}
+[data-testid="stFileUploaderFile"] > div {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: calc(100% - 40px) !important;
+}
+[data-testid="stFileUploaderFile"] small {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 200px !important;
+    display: inline-block !important;
 }
 [data-testid="stFileUploaderFile"] button {
     font-size: inherit !important;
