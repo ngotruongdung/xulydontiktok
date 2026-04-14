@@ -248,6 +248,10 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     padding: 20px !important;
     width: 100% !important;
     min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 /* Ẩn icon help (ⓘ) cho gọn */
 [data-testid="stFileUploader"] [data-testid="stTooltipHoverTarget"] {
@@ -256,27 +260,38 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
 /* ── Dropzone: CHƯA UPLOAD (có instructions) ── */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) {
+    display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 10px !important;
-    padding: 24px 20px 24px !important;
+    padding: 28px 20px 28px !important;
     text-align: center !important;
 }
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > div {
+/* Inner wrapper div & span — CENTER everything */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > * {
+    display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 10px !important;
     width: auto !important;
-    max-width: 100% !important;
+    text-align: center !important;
+}
+/* Browse button span wrapper */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > span {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
 }
 [data-testid="stFileUploaderDropzoneInstructions"] {
     font-size: 13px !important;
     color: #b0b8c9 !important;
     text-align: center !important;
+    display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    width: 100% !important;
 }
 
 /* ── Dropzone: ĐÃ UPLOAD (compact) ── */
@@ -691,21 +706,30 @@ iframe { border-radius: 16px; }
 /* ════════════════════════════════════════════════════════════
    FILE UPLOADER — VIETNAMESE OVERRIDE
 ════════════════════════════════════════════════════════════ */
+/* Ẩn text gốc tiếng Anh */
 [data-testid="stFileUploaderDropzoneInstructions"] {
-    visibility: hidden;
-    position: relative;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 [data-testid="stFileUploaderDropzoneInstructions"] * {
     display: none !important;
 }
-[data-testid="stFileUploaderDropzoneInstructions"]::before {
+/* Hiển thị text tiếng Việt thay thế — dùng ::after trên dropzone */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"])::after {
     content: 'Kéo thả file vào đây';
-    visibility: visible;
     display: block !important;
-    white-space: pre-line;
-    font-size: 13px; color: #b0b8c9; font-weight: 400;
-    text-align: center;
+    width: 100% !important;
+    font-size: 13px;
+    color: #b0b8c9;
+    font-weight: 400;
+    text-align: center !important;
     line-height: 1.8;
+    order: -1;
 }
 /* Nút chọn file chính */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button {
