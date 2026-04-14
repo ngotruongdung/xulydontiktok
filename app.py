@@ -74,6 +74,12 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     position: relative;
     z-index: 1;
 }
+/* Giới hạn nội dung chính để không bị loãng trên màn hình rộng */
+.stMainBlockContainer > div {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* ════════════════════════════════════════════════════════════
    TOPBAR — Minimal greeting
@@ -233,14 +239,21 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     display: block !important;
     padding-top: 10px !important;
 }
+
+/* ── Dropzone shared ── */
 [data-testid="stFileUploaderDropzone"] {
     border: none !important;
     background: transparent !important;
     padding: 20px !important;
+    width: 100% !important;
+    min-width: 0 !important;
 }
+
+/* ── Dropzone: CHƯA UPLOAD (có instructions) ── */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) {
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important;
     gap: 12px !important;
     padding: 32px 20px !important;
 }
@@ -248,7 +261,8 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     flex-direction: column !important;
     align-items: center !important;
     gap: 8px !important;
-    width: 100% !important;
+    width: auto !important;
+    max-width: 100% !important;
 }
 [data-testid="stFileUploaderDropzoneInstructions"] {
     font-size: 13px !important;
@@ -257,24 +271,44 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     flex-direction: column !important;
     align-items: center !important;
 }
+
+/* ── Dropzone: ĐÃ UPLOAD (compact) ── */
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) {
+    padding: 10px 16px !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    justify-content: center !important;
+}
+
+/* ── File item row (đã upload) ── */
 [data-testid="stFileUploaderFile"] {
-    padding: 6px 12px !important;
+    padding: 4px 8px !important;
     overflow: hidden !important;
     max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
 }
-[data-testid="stFileUploaderFile"] > div {
+/* Tên file truncate */
+[data-testid="stFileUploaderFile"] > div:first-child {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-    max-width: calc(100% - 40px) !important;
+    min-width: 0 !important;
+    flex: 1 !important;
 }
 [data-testid="stFileUploaderFile"] small {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-    max-width: 200px !important;
+    max-width: 180px !important;
     display: inline-block !important;
 }
+/* X delete button */
 [data-testid="stFileUploaderFile"] button {
     font-size: inherit !important;
     min-width: unset !important;
@@ -282,6 +316,7 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     border-radius: 50% !important;
     border: none !important;
     background: transparent !important;
+    flex-shrink: 0 !important;
 }
 [data-testid="stFileUploaderFile"] button::after {
     content: none !important;
