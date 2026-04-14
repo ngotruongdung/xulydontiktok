@@ -238,6 +238,7 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     text-align: center !important;
     display: block !important;
     padding-top: 10px !important;
+
 }
 
 /* ── Dropzone shared ── */
@@ -248,19 +249,25 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     width: 100% !important;
     min-width: 0 !important;
 }
+/* Ẩn icon help (ⓘ) cho gọn */
+[data-testid="stFileUploader"] [data-testid="stTooltipHoverTarget"] {
+    display: none !important;
+}
 
 /* ── Dropzone: CHƯA UPLOAD (có instructions) ── */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 12px !important;
-    padding: 32px 20px !important;
+    gap: 10px !important;
+    padding: 24px 20px 24px !important;
+    text-align: center !important;
 }
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > div {
     flex-direction: column !important;
     align-items: center !important;
-    gap: 8px !important;
+    justify-content: center !important;
+    gap: 10px !important;
     width: auto !important;
     max-width: 100% !important;
 }
