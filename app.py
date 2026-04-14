@@ -68,7 +68,7 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 .block-container {
     padding-top: 1.5rem !important;
     padding-bottom: 5rem !important;
-    max-width: 780px !important;
+    max-width: 100% !important;
     position: relative;
     z-index: 1;
 }
