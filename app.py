@@ -65,6 +65,12 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 }
 
 #MainMenu, footer, header { visibility: hidden; display: none; height: 0; overflow: hidden; }
+/* Ẩn branding "Created by" trên Streamlit Community Cloud */
+[data-testid="stAppDeployButton"] { display: none !important; }
+.viewerBadge_container__r5tak,
+.viewerBadge_link__qRIco,
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section > div.block-container > div:nth-child(1) > div > div:nth-child(1) > div > div:nth-child(3) > div { display: none !important; }
+a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !important; }
 .block-container {
     padding-top: 1.5rem !important;
     padding-bottom: 5rem !important;
