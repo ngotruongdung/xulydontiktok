@@ -1190,7 +1190,20 @@ else:
         col_sku       = df.columns[sku_col_index]
         col_variation = df.columns[variation_col_index]
         col_qty       = df.columns[qty_col_index]
-        id_col        = df.columns[0]
+
+        # Shopee: dùng cột G (mã vận đơn, index 6) thay vì cột A (mã đơn hàng)
+        if platform == "SHOPEE":
+            if len(df.columns) <= 6:
+                st.error("❌ File Shopee không đủ cột. Cần ít nhất cột G (mã vận đơn).")
+                st.stop()
+            id_col = df.columns[6]  # Cột G = mã vận đơn
+            # Bỏ những đơn không có mã vận đơn
+            no_tracking_count = df[id_col].isna().sum() + (df[id_col].astype(str).str.strip() == '').sum()
+            df = df[df[id_col].astype(str).str.strip().ne('') & df[id_col].notna()].reset_index(drop=True)
+            if no_tracking_count > 0:
+                st.info(f"ℹ️ Đã bỏ **{no_tracking_count}** đơn không có mã vận đơn (cột G trống).")
+        else:
+            id_col = df.columns[0]  # TikTok: vẫn dùng cột A
 
         total_raw     = df[id_col].nunique()
         removed_count = 0
@@ -1215,7 +1228,14 @@ else:
                     df_prev = pd.read_excel(prev_file, engine='calamine', dtype=str)
                 df_prev = df_prev.dropna(how='all').reset_index(drop=True)
 
-                prev_id_col  = df_prev.columns[0]
+                # Shopee: dùng cột G (mã vận đơn) cho file ca trước
+                if platform == "SHOPEE" and len(df_prev.columns) > 6:
+                    prev_id_col = df_prev.columns[6]
+                    # Bỏ dòng không có mã vận đơn trong file ca trước
+                    df_prev = df_prev[df_prev[prev_id_col].astype(str).str.strip().ne('') & df_prev[prev_id_col].notna()].reset_index(drop=True)
+                else:
+                    prev_id_col = df_prev.columns[0]
+
                 prev_ids     = set(df_prev[prev_id_col].dropna().astype(str).str.strip())
                 current_ids  = set(df[id_col].dropna().astype(str).str.strip())
                 duplicated   = current_ids & prev_ids
