@@ -211,8 +211,10 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 }
 
 /* ════════════════════════════════════════════════════════════
-   FILE UPLOADER — Glass style
+   FILE UPLOADER — Glass style (Complete rewrite)
 ════════════════════════════════════════════════════════════ */
+
+/* ── Container chính ── */
 [data-testid="stFileUploader"] {
     background: rgba(255,255,255,0.65);
     backdrop-filter: blur(16px);
@@ -229,6 +231,8 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     background: rgba(255,255,255,0.80);
     box-shadow: 0 4px 20px rgba(99,102,241,0.06);
 }
+
+/* ── Label (tiêu đề uploader) ── */
 [data-testid="stFileUploader"] label {
     font-size: 12.5px !important;
     font-weight: 600 !important;
@@ -237,84 +241,146 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     letter-spacing: 0 !important;
     text-align: center !important;
     display: block !important;
-    padding-top: 10px !important;
-
+    padding: 14px 16px 0 !important;
 }
 
-/* ── Dropzone shared ── */
-[data-testid="stFileUploaderDropzone"] {
-    border: none !important;
-    background: transparent !important;
-    padding: 20px !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-/* Ẩn icon help (ⓘ) cho gọn */
+/* ── Ẩn icon help (ⓘ) ── */
 [data-testid="stFileUploader"] [data-testid="stTooltipHoverTarget"] {
     display: none !important;
 }
 
-/* ── Dropzone: CHƯA UPLOAD (có instructions) ── */
+/* ── Ẩn TOÀN BỘ text gốc tiếng Anh trong instructions ── */
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    font-size: 0 !important;
+    line-height: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden !important;
+    position: absolute !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] * {
+    display: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   DROPZONE — TRẠNG THÁI CHƯA UPLOAD (có instructions)
+════════════════════════════════════════════════════════════ */
+[data-testid="stFileUploaderDropzone"] {
+    border: none !important;
+    background: transparent !important;
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 10px !important;
-    padding: 28px 20px 28px !important;
+    gap: 0 !important;
+    padding: 24px 20px 28px !important;
     text-align: center !important;
 }
-/* Inner wrapper div & span — CENTER everything */
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > * {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 10px !important;
-    width: auto !important;
-    text-align: center !important;
-}
-/* Browse button span wrapper */
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > span {
-    display: flex !important;
-    justify-content: center !important;
+
+/* Text hướng dẫn tiếng Việt */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"])::before {
+    content: 'Kéo thả file vào đây';
+    display: block !important;
     width: 100% !important;
-}
-[data-testid="stFileUploaderDropzoneInstructions"] {
-    font-size: 13px !important;
-    color: #b0b8c9 !important;
+    font-size: 13px;
+    color: #b0b8c9;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
     text-align: center !important;
+    line-height: 1;
+    margin-bottom: 16px;
+    order: -2;
+}
+
+/* Ẩn tất cả inner wrapper elements mặc định */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > div {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     width: 100% !important;
 }
 
-/* ── Dropzone: ĐÃ UPLOAD (compact) ── */
-[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) {
-    padding: 10px 16px !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
+/* ── Nút "Chọn file" (trạng thái chưa upload) ── */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button {
+    /* Ẩn text gốc hoàn toàn */
+    font-size: 0 !important;
+    line-height: 0 !important;
+    color: transparent !important;
+    /* Style nút */
+    min-width: 120px !important;
+    padding: 10px 24px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(199,210,254,0.50) !important;
+    background: linear-gradient(135deg, #f8faff, #f0f4ff) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+    position: relative !important;
+    display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
     justify-content: center !important;
+}
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button:hover {
+    border-color: #c7d2fe !important;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.10) !important;
+    transform: translateY(-1px) !important;
+}
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button::after {
+    content: 'Chọn file' !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    color: #818cf8 !important;
+    line-height: normal !important;
+}
+/* Ẩn mọi child bên trong button (icon, span text gốc) */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button > * {
+    display: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   DROPZONE — TRẠNG THÁI ĐÃ UPLOAD (compact)
+════════════════════════════════════════════════════════════ */
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    padding: 14px 16px !important;
 }
 
 /* ── File item row (đã upload) ── */
 [data-testid="stFileUploaderFile"] {
-    padding: 4px 8px !important;
+    padding: 8px 12px !important;
     overflow: hidden !important;
     max-width: 100% !important;
     min-width: 0 !important;
     display: flex !important;
     align-items: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
     flex-wrap: nowrap !important;
+    background: rgba(241,245,249,0.60) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(229,231,235,0.40) !important;
+    margin-bottom: 8px !important;
+    width: 100% !important;
 }
+
+/* Icon file */
+[data-testid="stFileUploaderFile"] [data-testid="stFileUploaderFileIcon"] {
+    flex-shrink: 0 !important;
+    opacity: 0.6 !important;
+}
+
 /* Tên file truncate */
 [data-testid="stFileUploaderFile"] > div:first-child {
     overflow: hidden !important;
@@ -327,10 +393,14 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-    max-width: 180px !important;
+    max-width: 160px !important;
     display: inline-block !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11.5px !important;
+    color: #64748b !important;
 }
-/* X delete button */
+
+/* Nút xóa file (X) */
 [data-testid="stFileUploaderFile"] button {
     font-size: inherit !important;
     min-width: unset !important;
@@ -339,9 +409,66 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
     border: none !important;
     background: transparent !important;
     flex-shrink: 0 !important;
+    opacity: 0.5 !important;
+    transition: opacity 0.2s ease !important;
+}
+[data-testid="stFileUploaderFile"] button:hover {
+    opacity: 1 !important;
+    background: rgba(239,68,68,0.08) !important;
 }
 [data-testid="stFileUploaderFile"] button::after {
     content: none !important;
+}
+
+/* ── Nút "Đổi file" (compact, sau khi upload) ── */
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button,
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button {
+    /* Ẩn text gốc hoàn toàn */
+    font-size: 0 !important;
+    line-height: 0 !important;
+    color: transparent !important;
+    /* Style nút */
+    padding: 7px 16px !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(199,210,254,0.50) !important;
+    background: linear-gradient(135deg, #f8faff, #f0f4ff) !important;
+    min-width: unset !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 2px !important;
+}
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button:hover,
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button:hover {
+    border-color: #c7d2fe !important;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
+    box-shadow: 0 2px 10px rgba(99,102,241,0.08) !important;
+}
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button::after,
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button::after {
+    content: 'Đổi file' !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    font-family: 'Inter', sans-serif !important;
+    color: #818cf8 !important;
+    line-height: normal !important;
+}
+/* Ẩn mọi child text bên trong nút compact */
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button > *,
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button > * {
+    display: none !important;
+}
+
+/* ── Ẩn nút browse dư thừa / nút "+" thừa ── */
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span:has(button) {
+    display: inline-flex !important;
+    justify-content: center !important;
+    width: auto !important;
+}
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span:nth-of-type(n+2) {
+    display: none !important;
 }
 
 /* Platform badge — Pill style */
@@ -703,80 +830,7 @@ iframe { border-radius: 16px; }
 }
 .os-section-sep { flex: 1; }
 
-/* ════════════════════════════════════════════════════════════
-   FILE UPLOADER — VIETNAMESE OVERRIDE
-════════════════════════════════════════════════════════════ */
-/* Ẩn text gốc tiếng Anh */
-[data-testid="stFileUploaderDropzoneInstructions"] {
-    font-size: 0 !important;
-    line-height: 0 !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-[data-testid="stFileUploaderDropzoneInstructions"] * {
-    display: none !important;
-}
-/* Hiển thị text tiếng Việt thay thế — dùng ::after trên dropzone */
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"])::after {
-    content: 'Kéo thả file vào đây';
-    display: block !important;
-    width: 100% !important;
-    font-size: 13px;
-    color: #b0b8c9;
-    font-weight: 400;
-    text-align: center !important;
-    line-height: 1.8;
-    order: -1;
-}
-/* Nút chọn file chính */
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button {
-    font-size: 0 !important;
-    min-width: 110px;
-    padding: 8px 20px !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(199,210,254,0.50) !important;
-    background: linear-gradient(135deg, #f8faff, #f0f4ff) !important;
-    transition: all 0.25s ease !important;
-    cursor: pointer;
-}
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button:hover {
-    border-color: #c7d2fe !important;
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
-    box-shadow: 0 4px 16px rgba(99,102,241,0.10) !important;
-    transform: translateY(-1px);
-}
-[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button::after {
-    content: 'Chọn file' !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    font-family: 'Inter', sans-serif !important;
-    color: #818cf8 !important;
-}
-/* Nút chọn file nhỏ khi đã upload (compact) */
-[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) {
-    padding: 8px 16px !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) button {
-    font-size: 0 !important;
-    padding: 6px 14px !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(199,210,254,0.50) !important;
-    background: #f8faff !important;
-    min-width: unset !important;
-}
-[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) button::after {
-    content: 'Chọn file khác' !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    font-family: 'Inter', sans-serif !important;
-    color: #818cf8 !important;
-}
+
 
 /* ════════════════════════════════════════════════════════════
    THIRD GRADIENT ORB (via JS-injected element)
