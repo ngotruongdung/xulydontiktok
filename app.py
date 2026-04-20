@@ -696,15 +696,81 @@ a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !im
 }
 .os-dl-meta {
     display: flex; align-items: center; justify-content: space-between;
-    margin-top: 14px; padding-top: 14px;
+    margin-top: 16px; padding-top: 16px;
     border-top: 1px solid rgba(241,245,249,0.80);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.os-dl-filename-wrap {
+    display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;
+}
+.os-dl-file-icon {
+    width: 32px; height: 32px; flex-shrink: 0;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    border: 1px solid rgba(147,197,253,0.35);
+}
+.os-dl-filename-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(241,245,249,0.70);
+    border: 1px solid rgba(229,231,235,0.60);
+    border-radius: 10px;
+    padding: 6px 12px;
+    min-width: 0;
+    flex: 1;
 }
 .os-dl-filename {
-    font-size: 12px; color: #b0b8c9;
+    font-size: 12.5px; font-weight: 600; color: #475569;
+    font-family: 'JetBrains Mono', monospace;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    flex: 1;
+}
+.os-dl-ext-badge {
+    font-size: 9.5px; font-weight: 700; color: #93c5fd;
+    background: rgba(219,234,254,0.60);
+    border: 1px solid rgba(147,197,253,0.30);
+    border-radius: 5px;
+    padding: 1px 5px;
+    letter-spacing: 0.4px;
+    flex-shrink: 0;
     font-family: 'JetBrains Mono', monospace;
 }
+.os-dl-copy-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 5px;
+    padding: 5px 13px;
+    border-radius: 10px;
+    border: 1px solid rgba(199,210,254,0.55);
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    color: #6366f1;
+    font-size: 11.5px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    user-select: none;
+    box-shadow: 0 1px 4px rgba(99,102,241,0.08);
+}
+.os-dl-copy-btn:hover {
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    border-color: #a5b4fc;
+    box-shadow: 0 3px 12px rgba(99,102,241,0.18);
+    transform: translateY(-1px);
+}
+.os-dl-copy-btn:active { transform: translateY(0); }
+.os-dl-copy-btn.copied {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border-color: rgba(52,211,153,0.40);
+    color: #059669;
+    box-shadow: 0 2px 8px rgba(52,211,153,0.15);
+}
 .os-dl-stats {
-    font-size: 12.5px; color: #94a3b8; font-weight: 500;
+    font-size: 12px; color: #b0b8c9; font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -1384,7 +1450,8 @@ else:
 
         # ── Download Word ─────────────────────────────────────────────────────
         current_date_file = datetime.now().strftime('%d.%m')
-        word_filename = f"{shop_name}_{platform}_{shift}_{current_date_file}.docx"
+        word_filename = f"{shop_name}_{platform}_{shift}_{current_date_file}_{total_orders} ĐƠN_{total_items} ÁO.docx"
+        word_filename_display = f"{shop_name} {platform} {shift} {current_date_file} {total_orders} ĐƠN {total_items} ÁO"
         word_data = export_to_word(detail_summary, total_orders, total_items, shop_name, platform, shift)
 
         st.markdown('<div class="os-dl-wrap">', unsafe_allow_html=True)
@@ -1396,8 +1463,23 @@ else:
         )
         st.markdown(f'''
             <div class="os-dl-meta">
-                <span class="os-dl-filename">{word_filename}</span>
-                <span class="os-dl-stats">{total_orders} đơn · {total_items} sản phẩm · {unique_skus_count} mã SKU</span>
+                <div class="os-dl-filename-wrap">
+                    <div class="os-dl-file-icon">📄</div>
+                    <div class="os-dl-filename-pill">
+                        <span class="os-dl-filename" id="os-filename-text">{word_filename_display}</span>
+                        <span class="os-dl-ext-badge">.DOCX</span>
+                    </div>
+                    <button class="os-dl-copy-btn" id="os-copy-btn" onclick="
+                        var txt = document.getElementById(\'os-filename-text\').innerText;
+                        navigator.clipboard.writeText(txt).then(function(){{
+                            var btn = document.getElementById(\'os-copy-btn\');
+                            btn.innerHTML = \'✓ Đã copy\';
+                            btn.classList.add(\'copied\');
+                            setTimeout(function(){{ btn.innerHTML = \'⎘ Copy tên\'; btn.classList.remove(\'copied\'); }}, 2000);
+                        }});
+                    ">⎘ Copy tên</button>
+                </div>
+                <span class="os-dl-stats">{total_orders} đơn · {total_items} sp · {unique_skus_count} SKU</span>
             </div>
         </div>''', unsafe_allow_html=True)
 
