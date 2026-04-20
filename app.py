@@ -13,249 +13,202 @@ from datetime import datetime
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Order Studio", page_icon="📦", layout="wide")
 
-# ─── GLOBAL STYLES — Soft Pastel Gradient ─────────────────────────────────────
+# ─── GLOBAL STYLES — Minimalism 2026 Light Mode ──────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ════════════════════════════════════════════════════════════
-   BASE RESET & FOUNDATION
+   DESIGN TOKENS — Minimalism 2026
+════════════════════════════════════════════════════════════
+   Background : #FFFFFF
+   Surface    : #F8FAFC
+   Border     : #E2E8F0
+   Text-1     : #0F172A  (primary)
+   Text-2     : #475569  (secondary)
+   Text-3     : #94A3B8  (muted)
+   Accent     : #2563EB  (blue-600)
+   Accent-bg  : #EFF6FF  (blue-50)
+   Accent-bdr : #BFDBFE  (blue-200)
+   Success    : #16A34A
+   Warning    : #D97706
 ════════════════════════════════════════════════════════════ */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
 .stApp {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: #FAFBFE;
+    background: #FFFFFF;
     min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-}
-/* Floating gradient orbs */
-.stApp::before {
-    content: '';
-    position: fixed;
-    top: -120px; right: -80px;
-    width: 380px; height: 380px;
-    background: radial-gradient(circle, rgba(232,210,255,0.45) 0%, rgba(232,210,255,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-    animation: orbFloat1 18s ease-in-out infinite;
-}
-.stApp::after {
-    content: '';
-    position: fixed;
-    bottom: -60px; left: -100px;
-    width: 340px; height: 340px;
-    background: radial-gradient(circle, rgba(187,247,208,0.35) 0%, rgba(187,247,208,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-    animation: orbFloat2 22s ease-in-out infinite;
-}
-@keyframes orbFloat1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(-40px, 30px) scale(1.05); }
-    66% { transform: translate(20px, -20px) scale(0.95); }
-}
-@keyframes orbFloat2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(50px, -40px) scale(1.08); }
+    color: #0F172A;
 }
 
 #MainMenu, footer, header { visibility: hidden; display: none; height: 0; overflow: hidden; }
-/* Ẩn branding "Created by" trên Streamlit Community Cloud */
 [data-testid="stAppDeployButton"] { display: none !important; }
 .viewerBadge_container__r5tak,
-.viewerBadge_link__qRIco,
-#root > div:nth-child(1) > div.withScreencast > div > div > div > section > div.block-container > div:nth-child(1) > div > div:nth-child(1) > div > div:nth-child(3) > div { display: none !important; }
+.viewerBadge_link__qRIco { display: none !important; }
 a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !important; }
+
 .block-container {
-    padding-top: 1.5rem !important;
+    padding-top: 0 !important;
     padding-bottom: 5rem !important;
     max-width: 100% !important;
-    padding-left: 3rem !important;
-    padding-right: 3rem !important;
-    position: relative;
-    z-index: 1;
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
 }
-/* Giới hạn nội dung chính để không bị loãng trên màn hình rộng */
 .stMainBlockContainer > div {
-    max-width: 1200px;
+    max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
 }
 
 /* ════════════════════════════════════════════════════════════
-   TOPBAR — Minimal greeting
+   TOPBAR
 ════════════════════════════════════════════════════════════ */
 .os-topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 0 24px;
-    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0 24px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #F1F5F9;
 }
-.os-topbar-brand {
-    display: flex; align-items: center; gap: 16px;
-}
+.os-topbar-brand { display: flex; align-items: center; gap: 12px; }
 .os-topbar-logo {
-    width: 44px; height: 44px;
-    background: linear-gradient(145deg, #e0e7ff, #c7d2fe);
-    border-radius: 14px;
+    width: 36px; height: 36px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    box-shadow: 0 2px 12px rgba(129,140,248,0.18);
+    font-size: 17px;
     flex-shrink: 0;
 }
 .os-topbar-name {
-    font-size: 22px; font-weight: 300;
-    color: #6366f1; letter-spacing: -0.3px;
-}
-.os-topbar-name strong {
-    font-weight: 700; color: #4338ca;
+    font-size: 17px;
+    font-weight: 700;
+    color: #0F172A;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
 }
 .os-topbar-sub {
-    font-size: 12.5px; color: #a5a8b8; font-weight: 400;
-    margin-top: 2px; letter-spacing: 0.1px;
+    font-size: 12px;
+    color: #94A3B8;
+    font-weight: 400;
+    margin-top: 2px;
+    letter-spacing: 0;
 }
 .os-topbar-status {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 12px; font-weight: 500; color: #9ca3af;
-    background: rgba(255,255,255,0.80);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(229,231,235,0.60);
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500; color: #64748B;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
     border-radius: 100px;
-    padding: 7px 16px;
+    padding: 6px 14px;
+    letter-spacing: 0;
 }
 .os-status-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #34d399;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #16A34A;
     display: inline-block;
-    animation: sdot 2.5s ease-in-out infinite;
-}
-@keyframes sdot {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52,211,153,0.4); }
-    50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(52,211,153,0); }
+    flex-shrink: 0;
 }
 
 /* ════════════════════════════════════════════════════════════
-   SECTION LABEL — Ultra minimal
+   SECTION LABEL
 ════════════════════════════════════════════════════════════ */
 .os-section {
-    display: flex; align-items: center; gap: 12px;
-    margin: 32px 0 16px;
-    padding-bottom: 0;
-    border-bottom: none;
+    display: flex; align-items: center; gap: 10px;
+    margin: 28px 0 14px;
 }
-.os-section-num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px;
-    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-    border-radius: 9px;
-    font-size: 11px; font-weight: 700;
-    font-family: 'JetBrains Mono', monospace;
-    color: #6366f1;
-    flex-shrink: 0;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.os-section:hover .os-section-num {
-    transform: scale(1.1) rotate(-3deg);
-    box-shadow: 0 4px 14px rgba(99,102,241,0.20);
+.os-section-line {
+    flex: 1;
+    height: 1px;
+    background: #F1F5F9;
 }
 .os-section-title {
-    font-size: 15px; font-weight: 600; color: #64748b;
-    letter-spacing: -0.1px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #94A3B8;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
-
-/* ════════════════════════════════════════════════════════════
-   GLASS CARD — Shared card mixin
-════════════════════════════════════════════════════════════ */
-.os-card {
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(229,231,235,0.50);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 8px 32px rgba(99,102,241,0.04);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+.os-section-tag {
+    font-size: 10px; font-weight: 600;
+    color: #2563EB;
+    background: #EFF6FF;
+    padding: 3px 10px; border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #BFDBFE;
+    white-space: nowrap;
 }
-.os-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03), 0 12px 40px rgba(99,102,241,0.08);
-}
+.os-section-sep { flex: 1; }
 
 /* ════════════════════════════════════════════════════════════
    SETTINGS SELECTS
 ════════════════════════════════════════════════════════════ */
 .stSelectbox > div > div {
-    border: 1px solid rgba(229,231,235,0.70) !important;
-    border-radius: 14px !important;
-    background: rgba(255,255,255,0.80) !important;
-    backdrop-filter: blur(12px) !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 10px !important;
+    background: #FFFFFF !important;
     font-size: 14px !important;
     font-family: 'Inter', sans-serif !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.02) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+    box-shadow: none !important;
+    color: #0F172A !important;
 }
 .stSelectbox > div > div:hover {
-    border-color: #c7d2fe !important;
-    box-shadow: 0 2px 12px rgba(99,102,241,0.08) !important;
+    border-color: #BFDBFE !important;
 }
 .stSelectbox > div > div:focus-within {
-    border-color: #a5b4fc !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.08) !important;
+    border-color: #2563EB !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08) !important;
 }
 .stSelectbox label {
-    font-size: 12.5px !important;
+    font-size: 12px !important;
     font-weight: 500 !important;
-    color: #94a3b8 !important;
+    color: #64748B !important;
     text-transform: none !important;
-    letter-spacing: 0.2px !important;
-    margin-bottom: 8px !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 6px !important;
 }
 
 /* ════════════════════════════════════════════════════════════
-   FILE UPLOADER — Glass style (Complete rewrite)
+   FILE UPLOADER
 ════════════════════════════════════════════════════════════ */
-
-/* ── Container chính ── */
 [data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.65);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1.5px dashed rgba(196,206,224,0.60) !important;
-    border-radius: 20px !important;
+    background: #FFFFFF;
+    border: 1.5px dashed #D1D5DB !important;
+    border-radius: 14px !important;
     padding: 0;
-    transition: all 0.25s ease;
+    transition: border-color 0.15s ease, background 0.15s ease;
     margin-top: 6px !important;
     overflow: hidden;
+    height: 110px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
 }
 [data-testid="stFileUploader"]:hover {
-    border-color: #c7d2fe !important;
-    background: rgba(255,255,255,0.80);
-    box-shadow: 0 4px 20px rgba(99,102,241,0.06);
+    border-color: #2563EB !important;
+    background: #EFF6FF;
 }
-
-/* ── Label (tiêu đề uploader) ── */
 [data-testid="stFileUploader"] label {
-    font-size: 12.5px !important;
-    font-weight: 600 !important;
-    color: #64748b !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
     text-transform: none !important;
     letter-spacing: 0 !important;
-    text-align: center !important;
+    text-align: left !important;
     display: block !important;
     padding: 14px 16px 0 !important;
 }
-
-/* ── Ẩn icon help (ⓘ) ── */
 [data-testid="stFileUploader"] [data-testid="stTooltipHoverTarget"] {
     display: none !important;
 }
-
-/* ── Ẩn TOÀN BỘ text gốc tiếng Anh trong instructions ── */
 [data-testid="stFileUploaderDropzoneInstructions"] {
     font-size: 0 !important;
     line-height: 0 !important;
@@ -267,66 +220,53 @@ a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !im
     visibility: hidden !important;
     position: absolute !important;
 }
-[data-testid="stFileUploaderDropzoneInstructions"] * {
-    display: none !important;
-}
+[data-testid="stFileUploaderDropzoneInstructions"] * { display: none !important; }
 
-/* ════════════════════════════════════════════════════════════
-   DROPZONE — TRẠNG THÁI CHƯA UPLOAD (có instructions)
-════════════════════════════════════════════════════════════ */
 [data-testid="stFileUploaderDropzone"] {
     border: none !important;
     background: transparent !important;
     width: 100% !important;
     min-width: 0 !important;
 }
-
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 0 !important;
-    padding: 24px 20px 28px !important;
+    padding: 10px 16px 16px !important;
     text-align: center !important;
+    flex: 1 !important;
 }
-
-/* Text hướng dẫn tiếng Việt */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"])::before {
     content: 'Kéo thả file vào đây';
     display: block !important;
     width: 100% !important;
-    font-size: 13px;
-    color: #b0b8c9;
+    font-size: 12px;
+    color: #94A3B8;
     font-weight: 400;
     font-family: 'Inter', sans-serif;
     text-align: center !important;
     line-height: 1;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     order: -2;
 }
-
-/* Ẩn tất cả inner wrapper elements mặc định */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) > div {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     width: 100% !important;
 }
-
-/* ── Nút "Chọn file" (trạng thái chưa upload) ── */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button {
-    /* Ẩn text gốc hoàn toàn */
     font-size: 0 !important;
     line-height: 0 !important;
     color: transparent !important;
-    /* Style nút */
-    min-width: 120px !important;
-    padding: 10px 24px !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(199,210,254,0.50) !important;
-    background: linear-gradient(135deg, #f8faff, #f0f4ff) !important;
-    transition: all 0.25s ease !important;
+    min-width: 110px !important;
+    padding: 9px 22px !important;
+    border-radius: 8px !important;
+    border: 1px solid #E2E8F0 !important;
+    background: #FFFFFF !important;
+    transition: all 0.15s ease !important;
     cursor: pointer !important;
     position: relative !important;
     display: inline-flex !important;
@@ -334,60 +274,48 @@ a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !im
     justify-content: center !important;
 }
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button:hover {
-    border-color: #c7d2fe !important;
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
-    box-shadow: 0 4px 16px rgba(99,102,241,0.10) !important;
-    transform: translateY(-1px) !important;
+    border-color: #2563EB !important;
+    background: #EFF6FF !important;
 }
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button::after {
     content: 'Chọn file' !important;
     font-size: 13px !important;
     font-weight: 600 !important;
     font-family: 'Inter', sans-serif !important;
-    color: #818cf8 !important;
+    color: #2563EB !important;
     line-height: normal !important;
 }
-/* Ẩn mọi child bên trong button (icon, span text gốc) */
 [data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) button > * {
     display: none !important;
 }
 
-/* ════════════════════════════════════════════════════════════
-   DROPZONE — TRẠNG THÁI ĐÃ UPLOAD (compact)
-════════════════════════════════════════════════════════════ */
+/* Khi đã có file: ẩn hoàn toàn dropzone — không cần "Kéo thả" hay nút "Chọn file" nữa */
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 0 !important;
-    padding: 14px 16px !important;
+    display: none !important;
 }
-
-/* ── File item row (đã upload) ── */
 [data-testid="stFileUploaderFile"] {
-    padding: 8px 12px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 8px 14px !important;
     overflow: hidden !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
     flex-wrap: nowrap !important;
-    background: rgba(241,245,249,0.60) !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(229,231,235,0.40) !important;
-    margin-bottom: 8px !important;
-    width: 100% !important;
+    background: #F8FAFC !important;
+    border-radius: 0 !important;
+    border: none !important;
+    border-top: 1px solid #F1F5F9 !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+    z-index: 1 !important;
 }
-
-/* Icon file */
 [data-testid="stFileUploaderFile"] [data-testid="stFileUploaderFileIcon"] {
     flex-shrink: 0 !important;
-    opacity: 0.6 !important;
+    opacity: 0.5 !important;
 }
-
-/* Tên file truncate */
 [data-testid="stFileUploaderFile"] > div:first-child {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -402,11 +330,10 @@ a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !im
     max-width: 160px !important;
     display: inline-block !important;
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 11.5px !important;
-    color: #64748b !important;
+    font-size: 12px !important;
+    color: #334155 !important;
+    max-width: 200px !important;
 }
-
-/* Nút xóa file (X) */
 [data-testid="stFileUploaderFile"] button {
     font-size: inherit !important;
     min-width: unset !important;
@@ -415,42 +342,36 @@ a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !im
     border: none !important;
     background: transparent !important;
     flex-shrink: 0 !important;
-    opacity: 0.5 !important;
-    transition: opacity 0.2s ease !important;
+    opacity: 0.4 !important;
+    transition: opacity 0.15s ease, background 0.15s ease !important;
 }
 [data-testid="stFileUploaderFile"] button:hover {
     opacity: 1 !important;
-    background: rgba(239,68,68,0.08) !important;
+    background: rgba(220,38,38,0.06) !important;
 }
-[data-testid="stFileUploaderFile"] button::after {
-    content: none !important;
-}
+[data-testid="stFileUploaderFile"] button::after { content: none !important; }
 
-/* ── Nút "Đổi file" (compact, sau khi upload) ── */
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button,
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button {
-    /* Ẩn text gốc hoàn toàn */
     font-size: 0 !important;
     line-height: 0 !important;
     color: transparent !important;
-    /* Style nút */
-    padding: 7px 16px !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(199,210,254,0.50) !important;
-    background: linear-gradient(135deg, #f8faff, #f0f4ff) !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    border: 1px solid #E2E8F0 !important;
+    background: #FFFFFF !important;
     min-width: unset !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.15s ease !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-top: 2px !important;
+    margin-top: 4px !important;
 }
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button:hover,
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button:hover {
-    border-color: #c7d2fe !important;
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
-    box-shadow: 0 2px 10px rgba(99,102,241,0.08) !important;
+    border-color: #2563EB !important;
+    background: #EFF6FF !important;
 }
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button::after,
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button::after {
@@ -458,490 +379,487 @@ a[href*="streamlit.io/cloud"], a[href*="share.streamlit.io"] { display: none !im
     font-size: 12px !important;
     font-weight: 500 !important;
     font-family: 'Inter', sans-serif !important;
-    color: #818cf8 !important;
+    color: #2563EB !important;
     line-height: normal !important;
 }
-/* Ẩn mọi child text bên trong nút compact */
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button > *,
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button > * {
     display: none !important;
 }
-
-/* ── Ẩn nút browse dư thừa / nút "+" thừa ── */
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span:has(button) {
-    display: inline-flex !important;
-    justify-content: center !important;
-    width: auto !important;
+    display: inline-flex !important; justify-content: center !important; width: auto !important;
 }
 [data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span:nth-of-type(n+2) {
     display: none !important;
 }
 
-/* Platform badge — Pill style */
+/* ════════════════════════════════════════════════════════════
+   PLATFORM BADGE
+════════════════════════════════════════════════════════════ */
 .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 11px; font-weight: 600;
-    padding: 4px 12px; border-radius: 100px;
-    letter-spacing: 0.3px;
+    display: inline-flex; align-items: center;
+    font-size: 10.5px; font-weight: 600;
+    padding: 3px 10px; border-radius: 6px;
+    letter-spacing: 0.2px;
     font-family: 'Inter', sans-serif;
     vertical-align: middle;
-    margin-left: 6px;
+    margin-left: 8px;
 }
 .badge-tiktok {
-    background: linear-gradient(135deg, #1e1b4b, #312e81);
-    color: #e0e7ff;
-    box-shadow: 0 2px 8px rgba(30,27,75,0.15);
+    background: #0F172A;
+    color: #F1F5F9;
 }
 .badge-shopee {
-    background: linear-gradient(135deg, #fff1f0, #ffe4e1);
-    color: #dc2626;
-    border: 1px solid rgba(220,38,38,0.12);
+    background: #FFF1F0;
+    color: #DC2626;
+    border: 1px solid rgba(220,38,38,0.15);
 }
 
 /* ════════════════════════════════════════════════════════════
-   METRIC CARDS — Soft glass with gradient orb
+   METRIC CARDS — Flat bento style
 ════════════════════════════════════════════════════════════ */
 .os-metrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin: 20px 0;
+    gap: 10px;
+    margin: 14px 0;
 }
 .os-metric {
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(229,231,235,0.50);
-    border-radius: 22px;
-    padding: 24px 22px;
-    position: relative; overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 8px 32px rgba(99,102,241,0.04);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    position: relative;
+    transition: box-shadow 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 .os-metric:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.03), 0 16px 48px rgba(99,102,241,0.08);
-}
-/* Gradient orb in each metric card */
-.os-metric:nth-child(1)::before {
-    content: '';
-    position: absolute; top: -30px; right: -30px;
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(196,181,253,0.35) 0%, transparent 70%);
-    border-radius: 50%;
-}
-.os-metric:nth-child(2)::before {
-    content: '';
-    position: absolute; top: -30px; right: -30px;
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(253,186,205,0.30) 0%, transparent 70%);
-    border-radius: 50%;
-}
-.os-metric:nth-child(3)::before {
-    content: '';
-    position: absolute; top: -30px; right: -30px;
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(167,243,208,0.35) 0%, transparent 70%);
-    border-radius: 50%;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 .os-metric-icon {
-    width: 38px; height: 38px;
-    background: rgba(241,245,249,0.80);
-    border-radius: 12px;
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: #FFFFFF;
+    border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 17px; margin-bottom: 16px;
-    border: 1px solid rgba(229,231,235,0.40);
+    font-size: 16px;
+    border: 1px solid #E2E8F0;
 }
+.os-metric-body { flex: 1; min-width: 0; }
 .os-metric-label {
-    font-size: 11.5px; font-weight: 500;
-    color: #94a3b8; text-transform: uppercase;
-    letter-spacing: 0.8px; margin-bottom: 8px;
+    font-size: 10px; font-weight: 600;
+    color: #94A3B8; text-transform: uppercase;
+    letter-spacing: 0.7px; margin-bottom: 2px;
 }
 .os-metric-value {
-    font-size: 38px; font-weight: 800;
-    color: #1e293b; letter-spacing: -2px;
-    line-height: 1; margin-bottom: 6px;
+    font-size: 28px; font-weight: 800;
+    color: #0F172A; letter-spacing: -1.5px;
+    line-height: 1; margin-bottom: 2px;
     font-variant-numeric: tabular-nums;
 }
 .os-metric-note {
-    font-size: 12.5px; color: #b0b8c9; font-weight: 400;
+    font-size: 11px; color: #94A3B8; font-weight: 400;
 }
 
 /* ════════════════════════════════════════════════════════════
-   DEDUP BLOCK — Glass card
+   DEDUP BLOCK — Flat alert card
 ════════════════════════════════════════════════════════════ */
 .os-dedup {
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(229,231,235,0.50);
-    border-radius: 20px;
-    padding: 20px 24px;
-    display: flex; align-items: center; gap: 20px;
-    margin: 14px 0 22px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 8px 32px rgba(99,102,241,0.04);
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 16px;
+    margin: 12px 0 20px;
 }
 .os-dedup.has-removed {
-    border-left: 4px solid #fbbf24;
-    background: linear-gradient(135deg, rgba(255,251,235,0.80) 0%, rgba(255,255,255,0.72) 40%);
+    background: #FFFBEB;
+    border-color: #FDE68A;
+    border-left: 3px solid #D97706;
 }
 .os-dedup.no-removed {
-    border-left: 4px solid #34d399;
-    background: linear-gradient(135deg, rgba(236,253,245,0.80) 0%, rgba(255,255,255,0.72) 40%);
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+    border-left: 3px solid #16A34A;
 }
-.os-dedup-icon { font-size: 24px; flex-shrink: 0; }
+.os-dedup-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
 .os-dedup-body { flex: 1; }
 .os-dedup-title {
-    font-size: 14px; font-weight: 600; color: #334155;
-    margin-bottom: 10px;
+    font-size: 13px; font-weight: 600; color: #0F172A;
+    margin-bottom: 8px;
 }
-.os-dedup-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.os-dedup-pills { display: flex; gap: 5px; flex-wrap: wrap; }
 .os-dedup-pill {
-    font-size: 11.5px; font-weight: 500;
+    font-size: 11px; font-weight: 500;
     font-family: 'Inter', sans-serif;
-    padding: 4px 12px; border-radius: 100px;
-    background: rgba(241,245,249,0.80); color: #94a3b8;
-    border: 1px solid rgba(229,231,235,0.40);
+    padding: 3px 10px; border-radius: 100px;
+    background: #F1F5F9; color: #64748B;
+    border: 1px solid #E2E8F0;
 }
 .os-dedup-pill.removed {
-    background: rgba(254,249,195,0.60); color: #b45309;
-    border-color: rgba(253,224,71,0.30);
+    background: #FEF3C7; color: #92400E;
+    border-color: #FDE68A;
 }
 .os-dedup-pill.kept {
-    background: rgba(209,250,229,0.60); color: #059669;
-    border-color: rgba(52,211,153,0.20);
+    background: #DCFCE7; color: #166534;
+    border-color: #BBF7D0;
 }
 .os-dedup-count {
     text-align: right; flex-shrink: 0;
-    font-size: 34px; font-weight: 800;
+    font-size: 32px; font-weight: 800;
     letter-spacing: -1.5px;
     font-variant-numeric: tabular-nums;
+    line-height: 1;
 }
-.os-dedup-count.warn { color: #f59e0b; }
-.os-dedup-count.ok   { color: #34d399; }
+.os-dedup-count.warn { color: #D97706; }
+.os-dedup-count.ok   { color: #16A34A; }
 .os-dedup-count-lbl {
-    font-size: 11.5px; color: #b0b8c9;
-    margin-top: 2px; text-align: right; font-weight: 400;
+    font-size: 11px; color: #94A3B8;
+    margin-top: 3px; text-align: right; font-weight: 400;
 }
 
 /* ════════════════════════════════════════════════════════════
-   SKU HEADER ROW — Glass pill
+   SKU HEADER ROW
 ════════════════════════════════════════════════════════════ */
 .os-sku-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px;
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(229,231,235,0.50);
-    border-radius: 16px;
-    margin: 20px 0 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 4px 16px rgba(99,102,241,0.03);
+    padding: 10px 0;
+    border-bottom: 1px solid #F1F5F9;
+    margin: 22px 0 6px;
 }
-.os-sku-left { display: flex; align-items: center; gap: 12px; }
+.os-sku-left { display: flex; align-items: center; gap: 10px; }
 .os-sku-code {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px; font-weight: 600;
-    color: #6366f1;
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-    padding: 5px 14px; border-radius: 10px;
-    letter-spacing: 0.3px;
+    font-size: 11.5px; font-weight: 600;
+    color: #2563EB;
+    background: #EFF6FF;
+    padding: 4px 12px; border-radius: 6px;
+    letter-spacing: 0.2px;
+    border: 1px solid #BFDBFE;
 }
-.os-sku-label { font-size: 12.5px; color: #b0b8c9; font-weight: 400; }
+.os-sku-label { font-size: 12px; color: #94A3B8; font-weight: 400; }
 .os-sku-total {
-    font-size: 15px; font-weight: 700;
-    color: #334155; letter-spacing: -0.3px;
+    font-size: 14px; font-weight: 700;
+    color: #0F172A; letter-spacing: -0.3px;
     font-variant-numeric: tabular-nums;
 }
 
 /* ════════════════════════════════════════════════════════════
-   DOWNLOAD BUTTON — Soft gradient
+   DOWNLOAD BUTTON
+════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════
+   DOWNLOAD BUTTON
 ════════════════════════════════════════════════════════════ */
 .stDownloadButton > button {
-    background: linear-gradient(135deg, #818cf8, #a78bfa) !important;
-    color: #fff !important;
+    background: #2563EB !important;
+    color: #FFFFFF !important;
     border: none !important;
-    border-radius: 16px !important;
-    padding: 15px 28px !important;
+    border-radius: 10px !important;
+    padding: 11px 24px !important;
     font-weight: 600 !important;
-    font-size: 13.5px !important;
-    letter-spacing: 0.1px !important;
+    font-size: 13px !important;
+    letter-spacing: -0.1px !important;
     font-family: 'Inter', sans-serif !important;
-    box-shadow: 0 4px 24px rgba(129,140,248,0.30) !important;
-    transition: all 0.3s cubic-bezier(.34,1.56,.64,1) !important;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.2) !important;
+    transition: background 0.15s ease, box-shadow 0.15s ease !important;
     width: 100% !important;
+    height: 42px !important;
 }
 .stDownloadButton > button:hover {
-    box-shadow: 0 8px 36px rgba(129,140,248,0.45) !important;
-    transform: translateY(-2px) !important;
-    background: linear-gradient(135deg, #6366f1, #818cf8) !important;
+    background: #1D4ED8 !important;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25) !important;
 }
 .stDownloadButton > button:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 2px 12px rgba(129,140,248,0.25) !important;
+    background: #1E40AF !important;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.15) !important;
 }
-
-/* ════════════════════════════════════════════════════════════
-   DOWNLOAD WRAPPER — Glass
-════════════════════════════════════════════════════════════ */
-.os-dl-wrap {
-    border: 1px solid rgba(229,231,235,0.50);
-    border-radius: 22px;
-    padding: 22px;
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    margin: 20px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 8px 32px rgba(99,102,241,0.04);
+.os-dl-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    margin-top: 12px;
+    flex-wrap: nowrap;
+    min-width: 0;
 }
-.os-dl-meta {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 16px; padding-top: 16px;
-    border-top: 1px solid rgba(241,245,249,0.80);
-    gap: 12px;
-    flex-wrap: wrap;
+.os-dl-download-btn-wrap {
+    flex-shrink: 0;
 }
-.os-dl-filename-wrap {
-    display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;
-}
-.os-dl-file-icon {
-    width: 32px; height: 32px; flex-shrink: 0;
-    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-    border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
-    border: 1px solid rgba(147,197,253,0.35);
+.os-dl-download-btn-wrap .stDownloadButton > button {
+    padding: 9px 18px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.2) !important;
+    white-space: nowrap !important;
+    width: auto !important;
 }
 .os-dl-filename-pill {
     display: flex; align-items: center; gap: 6px;
-    background: rgba(241,245,249,0.70);
-    border: 1px solid rgba(229,231,235,0.60);
-    border-radius: 10px;
-    padding: 6px 12px;
-    min-width: 0;
-    flex: 1;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 7px 12px;
+    flex: 1; min-width: 0;
+    overflow: hidden;
 }
 .os-dl-filename {
-    font-size: 12.5px; font-weight: 600; color: #475569;
-    font-family: 'JetBrains Mono', monospace;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 12px; font-weight: 500;
+    color: #334155;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     flex: 1;
+    min-width: 0;
+    letter-spacing: 0;
 }
 .os-dl-ext-badge {
-    font-size: 9.5px; font-weight: 700; color: #93c5fd;
-    background: rgba(219,234,254,0.60);
-    border: 1px solid rgba(147,197,253,0.30);
-    border-radius: 5px;
-    padding: 1px 5px;
-    letter-spacing: 0.4px;
+    font-size: 10px; font-weight: 700;
+    background: #DBEAFE; color: #1E40AF;
+    padding: 2px 7px; border-radius: 5px;
+    letter-spacing: 0.3px;
     flex-shrink: 0;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', sans-serif;
 }
 .os-dl-copy-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 5px;
-    padding: 5px 13px;
-    border-radius: 10px;
-    border: 1px solid rgba(199,210,254,0.55);
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-    color: #6366f1;
-    font-size: 11.5px; font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
     flex-shrink: 0;
-    transition: all 0.2s ease;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 7px 13px;
+    font-size: 12px; font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s ease;
     white-space: nowrap;
-    user-select: none;
-    box-shadow: 0 1px 4px rgba(99,102,241,0.08);
 }
 .os-dl-copy-btn:hover {
-    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-    border-color: #a5b4fc;
-    box-shadow: 0 3px 12px rgba(99,102,241,0.18);
-    transform: translateY(-1px);
+    border-color: #2563EB;
+    color: #2563EB;
+    background: #EFF6FF;
 }
-.os-dl-copy-btn:active { transform: translateY(0); }
 .os-dl-copy-btn.copied {
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    border-color: rgba(52,211,153,0.40);
-    color: #059669;
-    box-shadow: 0 2px 8px rgba(52,211,153,0.15);
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+    color: #16A34A;
 }
 .os-dl-stats {
-    font-size: 12px; color: #b0b8c9; font-weight: 500;
-    white-space: nowrap;
+    font-size: 11.5px; color: #94A3B8;
+    font-weight: 400; white-space: nowrap;
     flex-shrink: 0;
 }
 
 /* ════════════════════════════════════════════════════════════
-   EMPTY STATE — Floating card with orb
+   EMPTY STATE
 ════════════════════════════════════════════════════════════ */
 .os-empty {
     text-align: center;
-    padding: 64px 32px;
-    border: 1px solid rgba(229,231,235,0.50);
-    border-radius: 28px;
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    margin: 14px 0 36px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 8px 32px rgba(99,102,241,0.04);
-    position: relative;
-    overflow: hidden;
-}
-.os-empty::before {
-    content: '';
-    position: absolute;
-    top: 30px; left: 50%;
-    transform: translateX(-50%);
-    width: 180px; height: 180px;
-    background: radial-gradient(circle, rgba(196,181,253,0.22) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: emptyOrb 6s ease-in-out infinite;
-}
-@keyframes emptyOrb {
-    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
-    50% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+    padding: 56px 32px;
+    border: 1px solid #F1F5F9;
+    border-radius: 20px;
+    background: #FAFAFA;
+    margin: 12px 0 32px;
 }
 .os-empty-icon {
-    font-size: 36px; margin-bottom: 20px; display: block;
-    position: relative;
-    animation: emptyFloat 3.5s ease-in-out infinite;
-}
-@keyframes emptyFloat {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-6px); }
+    font-size: 32px; margin-bottom: 16px; display: block;
+    opacity: 0.5;
 }
 .os-empty-title {
-    font-size: 18px; font-weight: 700; color: #334155;
-    margin-bottom: 10px; letter-spacing: -0.3px;
-    position: relative;
+    font-size: 17px; font-weight: 700; color: #0F172A;
+    margin-bottom: 8px; letter-spacing: -0.3px;
 }
 .os-empty-sub {
-    font-size: 14px; color: #94a3b8;
-    max-width: 380px; margin: 0 auto 36px;
-    line-height: 1.75; font-weight: 400;
-    position: relative;
+    font-size: 13.5px; color: #94A3B8;
+    max-width: 360px; margin: 0 auto 28px;
+    line-height: 1.7; font-weight: 400;
 }
 .os-steps-row {
-    display: flex; align-items: flex-start;
-    justify-content: center; gap: 0;
-    position: relative;
+    display: flex; align-items: center;
+    justify-content: center; gap: 6px;
+    flex-wrap: wrap;
 }
 .os-step-item {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 8px; padding: 0 20px;
-    position: relative;
+    display: flex; align-items: center; gap: 6px;
 }
-.os-step-item:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 15px; right: -4px;
-    width: 28px; height: 2px;
-    background: linear-gradient(90deg, rgba(196,181,253,0.40), rgba(196,181,253,0.10));
-    border-radius: 1px;
+.os-step-sep {
+    color: #CBD5E1; font-size: 12px;
 }
 .os-step-num {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; color: #818cf8;
+    width: 22px; height: 22px;
+    background: #F1F5F9;
+    border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #64748B;
     font-family: 'JetBrains Mono', monospace;
-    border: 1px solid rgba(199,210,254,0.50);
+    flex-shrink: 0;
 }
 .os-step-txt {
-    font-size: 11.5px; color: #b0b8c9; font-weight: 500;
-    white-space: nowrap;
+    font-size: 11.5px; color: #94A3B8; font-weight: 500;
 }
 
 /* ════════════════════════════════════════════════════════════
-   UPLOAD NOTE — Minimal
+   UPLOAD NOTE
 ════════════════════════════════════════════════════════════ */
 .os-note {
-    font-size: 12.5px; color: #b0b8c9;
-    margin-top: 12px; line-height: 1.7;
-    padding: 2px 4px;
+    font-size: 12px; color: #94A3B8;
+    margin-top: 10px; line-height: 1.65;
+    padding: 2px 0;
 }
-.os-note strong { color: #818cf8; font-weight: 600; }
-.os-note::before { content: ''; }
+.os-note strong { color: #2563EB; font-weight: 600; }
 
 /* ════════════════════════════════════════════════════════════
-   DIVIDER — Soft gradient
+   DIVIDER
 ════════════════════════════════════════════════════════════ */
 .os-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(196,181,253,0.20), transparent);
-    margin: 28px 0;
+    background: #F1F5F9;
+    margin: 24px 0;
 }
 
 /* ════════════════════════════════════════════════════════════
-   DATAFRAME — Glass
+   DATAFRAME
 ════════════════════════════════════════════════════════════ */
 .stDataFrame {
-    border: 1px solid rgba(229,231,235,0.50) !important;
-    border-radius: 16px !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 12px !important;
     overflow: hidden !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+    box-shadow: none !important;
 }
-iframe { border-radius: 16px; }
-
-/* ════════════════════════════════════════════════════════════
-   SECTION TAG
-════════════════════════════════════════════════════════════ */
-.os-section-tag {
-    font-size: 10px; font-weight: 600;
-    color: #818cf8;
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-    padding: 4px 12px; border-radius: 100px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-family: 'JetBrains Mono', monospace;
-    margin-left: auto;
-    border: 1px solid rgba(199,210,254,0.40);
-}
-.os-section-sep { flex: 1; }
-
-
-
-/* ════════════════════════════════════════════════════════════
-   THIRD GRADIENT ORB (via JS-injected element)
-════════════════════════════════════════════════════════════ */
-.os-orb-pink {
-    position: fixed;
-    top: 40%; right: 5%;
-    width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(253,186,205,0.25) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-    animation: orbFloat3 20s ease-in-out infinite;
-}
-@keyframes orbFloat3 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    40% { transform: translate(-30px, 40px) scale(1.06); }
-    80% { transform: translate(20px, -20px) scale(0.94); }
-}
+iframe { border-radius: 12px; }
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-    .os-topbar { flex-wrap: wrap; gap: 12px; }
+    .os-topbar { flex-wrap: wrap; gap: 10px; }
     .os-topbar-status { margin-left: auto; }
     .os-metrics { grid-template-columns: 1fr; }
-    .os-dedup { flex-direction: column; text-align: center; }
-    .os-dedup-count { text-align: center; }
-    .os-dedup-count-lbl { text-align: center; }
-    .os-steps-row { flex-wrap: wrap; gap: 12px; }
-    .os-step-item:not(:last-child)::after { display: none; }
-    .os-topbar-name { font-size: 19px; }
+    .os-dedup { flex-direction: column; gap: 12px; }
+    .os-dedup-count { text-align: left; }
+    .os-dedup-count-lbl { text-align: left; }
+    .os-steps-row { flex-direction: column; align-items: center; gap: 8px; }
+    .os-step-sep { display: none; }
+    .block-container { padding-left: 1.2rem !important; padding-right: 1.2rem !important; }
+}
+/* ════════════════════════════════════════════════════════════
+   FILE UPLOADER — Refined layout
+════════════════════════════════════════════════════════════ */
+/* Wrap mỗi uploader trong card nhẹ */
+[data-testid="stFileUploader"] {
+    box-shadow: none !important;
+}
+/* Label căn trái, font bình thường */
+[data-testid="stFileUploader"] label {
+    padding: 12px 14px 10px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
+    text-transform: none !important;
+    text-align: left !important;
+    letter-spacing: 0 !important;
+}
+/* Line phân cách giữa label và dropzone */
+[data-testid="stFileUploader"] label::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #F1F5F9;
+    margin-top: 10px;
+}
+/* Dropzone inner padding thoáng hơn */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileUploaderDropzoneInstructions"]) {
+    padding: 18px 20px 22px !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   GLOBAL FONT OVERRIDE — Inter everywhere
+════════════════════════════════════════════════════════════ */
+.stApp, .stApp * {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+/* Mono chỉ cho các element cụ thể */
+.os-dl-filename, .os-sku-code, .os-dl-ext-badge,
+[data-testid="stFileUploaderFile"] small {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+/* Streamlit default overrides */
+[class*="stMarkdown"], [class*="stText"], p, span, div {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+/* Fix column gap giữa 2 ô upload */
+[data-testid="stHorizontalBlock"] {
+    gap: 12px !important;
+}
+/* Khi đã có file — wrapper đổi sang solid border */
+[data-testid="stFileUploader"]:has([data-testid="stFileUploaderFile"]) {
+    border-style: solid !important;
+    border-color: #E2E8F0 !important;
+    border-width: 1px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+}
+/* Nút đổi file — cạnh phải, nhỏ gọn */
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > button::after,
+[data-testid="stFileUploaderDropzone"]:not(:has([data-testid="stFileUploaderDropzoneInstructions"])) > span > button::after {
+    content: 'Đổi file' !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: #64748B !important;
+    line-height: normal !important;
+}
+
+/* ════ SPACING FIXES ════ */
+/* Chips bắt buộc/tùy chọn — khoảng cách trên */
+[data-testid="stVerticalBlock"] > [data-testid="stMarkdownContainer"]:has(div[style*="display:flex"]) {
+    margin-top: 6px !important;
+    margin-bottom: 4px !important;
+}
+/* Streamlit info/warning box — nhỏ gọn, đồng bộ font */
+[data-testid="stAlert"] {
+    margin-top: 10px !important;
+    margin-bottom: 4px !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+}
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] .stAlertContent,
+[data-testid="stAlert"] div,
+[data-testid="stAlert"] span {
+    font-size: 11.5px !important;
+    line-height: 1.5 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+/* Upload columns — luôn cùng chiều cao (stretch) */
+[data-testid="stHorizontalBlock"] {
+    align-items: stretch !important;
+}
+[data-testid="stHorizontalBlock"] > [data-testid="stVerticalBlock"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+[data-testid="stHorizontalBlock"] > [data-testid="stVerticalBlock"] > [data-testid="stFileUploader"] {
+    flex: 1 !important;
+}
+
+/* Upload wrapper: khi có file đổi sang solid border */
+[data-testid="stFileUploader"]:has([data-testid="stFileUploaderFile"]) {
+    border-style: solid !important;
+    border-color: #E2E8F0 !important;
+    border-width: 1px !important;
+}
+
+/* Section kết quả — tách rõ khỏi upload area */
+.os-section {
+    margin-top: 24px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Inject extra gradient orb
-st.markdown('<div class="os-orb-pink"></div>', unsafe_allow_html=True)
+
 
 # ─── HÀM TÁCH SKU ─────────────────────────────────────────────────────────────
 def parse_sku_from_col_g(val):
@@ -1181,7 +1099,7 @@ st.markdown('''
     <div class="os-topbar-brand">
         <div class="os-topbar-logo">📦</div>
         <div>
-            <div class="os-topbar-name">Xin chào, <strong>Order Studio</strong></div>
+            <div class="os-topbar-name">Order Studio</div>
             <div class="os-topbar-sub">TikTok & Shopee · Tổng hợp · Lọc trùng · Xuất Word</div>
         </div>
     </div>
@@ -1196,8 +1114,8 @@ st.markdown('''
 # ══════════════════════════════════════════════════════════════════════════════
 st.markdown('''
 <div class="os-section">
-    <span class="os-section-num">01</span>
     <span class="os-section-title">Cài đặt</span>
+    <div class="os-section-line"></div>
 </div>
 ''', unsafe_allow_html=True)
 
@@ -1224,33 +1142,39 @@ platform_badge = (
 )
 
 st.markdown(f'''
-<div class="os-section" style="margin-top: 20px;">
-    <span class="os-section-num">02</span>
+<div class="os-section">
     <span class="os-section-title">Tải file đơn hàng {platform_badge}</span>
+    <div class="os-section-line"></div>
 </div>
 ''', unsafe_allow_html=True)
 
 col_f1, col_f2 = st.columns(2)
 with col_f1:
     uploaded_file = st.file_uploader(
-        f"📄 File ca hiện tại ({platform}) · Bắt buộc",
+        f"File ca hiện tại ({platform})",
         type=["csv", "xlsx"],
         key="file_current",
         help="File đơn hàng ca này cần tổng hợp"
     )
 with col_f2:
     prev_file = st.file_uploader(
-        "📂 File ca trước · Tùy chọn (lọc đơn trùng)",
+        "File ca trước (tùy chọn)",
         type=["csv", "xlsx"],
         key="file_prev",
         help="Tải lên để loại bỏ đơn đã soạn ở ca trước"
     )
 
 st.markdown('''
-<p class="os-note">
-    Chỉ cần <strong>file ca hiện tại</strong> là đủ để tổng hợp và xuất Word.
-    Muốn <strong>lọc đơn trùng</strong> thì tải thêm file ca trước.
-</p>
+<div style="display:flex; gap:10px; margin-top:10px; align-items:center; flex-wrap:wrap;">
+    <div style="display:inline-flex; align-items:center; gap:6px; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:7px 13px;">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#2563EB" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span style="font-size:12.5px; font-weight:500; color:#1E40AF; font-family:Inter,sans-serif;">File ca hiện tại — <strong style="font-weight:700;">Bắt buộc</strong></span>
+    </div>
+    <div style="display:inline-flex; align-items:center; gap:6px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:7px 13px;">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#94A3B8" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span style="font-size:12.5px; font-weight:500; color:#64748B; font-family:Inter,sans-serif;">File ca trước — <span style="color:#94A3B8;">Tùy chọn · dùng để lọc đơn trùng</span></span>
+    </div>
+</div>
 ''', unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1259,11 +1183,11 @@ st.markdown('''
 if not uploaded_file:
     st.markdown('''
     <div class="os-section" style="margin-top:28px;">
-        <span class="os-section-num">03</span>
         <span class="os-section-title">Kết quả</span>
+        <div class="os-section-line"></div>
     </div>
     <div class="os-empty">
-        <span class="os-empty-icon">📂</span>
+        <span class="os-empty-icon">📦</span>
         <div class="os-empty-title">Chưa có dữ liệu</div>
         <div class="os-empty-sub">Tải lên file đơn hàng phía trên để bắt đầu tổng hợp, lọc trùng và xuất file Word soạn hàng.</div>
         <div class="os-steps-row">
@@ -1271,17 +1195,20 @@ if not uploaded_file:
                 <div class="os-step-num">1</div>
                 <div class="os-step-txt">Chọn cửa hàng</div>
             </div>
+            <span class="os-step-sep">→</span>
             <div class="os-step-item">
                 <div class="os-step-num">2</div>
                 <div class="os-step-txt">Tải file lên</div>
             </div>
+            <span class="os-step-sep">→</span>
             <div class="os-step-item">
                 <div class="os-step-num">3</div>
-                <div class="os-step-txt">Lọc trùng ca trước</div>
+                <div class="os-step-txt">Lọc trùng</div>
             </div>
+            <span class="os-step-sep">→</span>
             <div class="os-step-item">
                 <div class="os-step-num">4</div>
-                <div class="os-step-txt">Tải Word soạn hàng</div>
+                <div class="os-step-txt">Tải Word</div>
             </div>
         </div>
     </div>
@@ -1338,9 +1265,8 @@ else:
         # ── Nhãn mục 03 ─────────────────────────────────────────────────
         st.markdown('''
         <div class="os-section" style="margin-top:28px;">
-            <span class="os-section-num">03</span>
             <span class="os-section-title">Kết quả</span>
-            <span class="os-section-sep"></span>
+            <div class="os-section-line"></div>
             <span class="os-section-tag">xuất dữ liệu</span>
         </div>
         ''', unsafe_allow_html=True)
@@ -1429,21 +1355,27 @@ else:
         <div class="os-metrics">
             <div class="os-metric">
                 <div class="os-metric-icon">📦</div>
-                <div class="os-metric-label">Tổng đơn hàng</div>
-                <div class="os-metric-value">{total_orders}</div>
-                <div class="os-metric-note">{dedup_note}</div>
+                <div class="os-metric-body">
+                    <div class="os-metric-label">Tổng đơn hàng</div>
+                    <div class="os-metric-value">{total_orders}</div>
+                    <div class="os-metric-note">{dedup_note}</div>
+                </div>
             </div>
             <div class="os-metric">
                 <div class="os-metric-icon">👕</div>
-                <div class="os-metric-label">Tổng sản phẩm</div>
-                <div class="os-metric-value">{total_items}</div>
-                <div class="os-metric-note">tổng số lượng áo</div>
+                <div class="os-metric-body">
+                    <div class="os-metric-label">Tổng sản phẩm</div>
+                    <div class="os-metric-value">{total_items}</div>
+                    <div class="os-metric-note">tổng số lượng áo</div>
+                </div>
             </div>
             <div class="os-metric">
                 <div class="os-metric-icon">🏷️</div>
-                <div class="os-metric-label">Loại SKU</div>
-                <div class="os-metric-value">{unique_skus_count}</div>
-                <div class="os-metric-note">mã sản phẩm khác nhau</div>
+                <div class="os-metric-body">
+                    <div class="os-metric-label">Loại SKU</div>
+                    <div class="os-metric-value">{unique_skus_count}</div>
+                    <div class="os-metric-note">mã sản phẩm khác nhau</div>
+                </div>
             </div>
         </div>
         ''', unsafe_allow_html=True)
@@ -1454,34 +1386,31 @@ else:
         word_filename_display = f"{shop_name} {platform} {shift} {current_date_file} {total_orders} ĐƠN {total_items} ÁO"
         word_data = export_to_word(detail_summary, total_orders, total_items, shop_name, platform, shift)
 
-        st.markdown('<div class="os-dl-wrap">', unsafe_allow_html=True)
+        # ── Download row ──
+        st.markdown(f'''
+        <div class="os-dl-row">
+            <div class="os-dl-filename-pill">
+                <span class="os-dl-filename" id="os-filename-text">{word_filename_display}</span>
+                <span class="os-dl-ext-badge">.DOCX</span>
+            </div>
+            <button class="os-dl-copy-btn" id="os-copy-btn" onclick="
+                var txt = document.getElementById(\'os-filename-text\').innerText;
+                navigator.clipboard.writeText(txt).then(function(){{
+                    var btn = document.getElementById(\'os-copy-btn\');
+                    btn.innerHTML = \'✓ Đã copy\';
+                    btn.classList.add(\'copied\');
+                    setTimeout(function(){{ btn.innerHTML = \'⎘ Copy tên\'; btn.classList.remove(\'copied\'); }}, 2000);
+                }});
+            ">⎘ Copy tên</button>
+            <span class="os-dl-stats">{total_orders} đơn &middot; {total_items} sp &middot; {unique_skus_count} SKU</span>
+        </div>
+        ''', unsafe_allow_html=True)
         st.download_button(
             f"⬇️  Tải xuống phiếu soạn hàng  —  {total_orders} đơn · {total_items} áo",
             word_data,
             word_filename,
             use_container_width=True
         )
-        st.markdown(f'''
-            <div class="os-dl-meta">
-                <div class="os-dl-filename-wrap">
-                    <div class="os-dl-file-icon">📄</div>
-                    <div class="os-dl-filename-pill">
-                        <span class="os-dl-filename" id="os-filename-text">{word_filename_display}</span>
-                        <span class="os-dl-ext-badge">.DOCX</span>
-                    </div>
-                    <button class="os-dl-copy-btn" id="os-copy-btn" onclick="
-                        var txt = document.getElementById(\'os-filename-text\').innerText;
-                        navigator.clipboard.writeText(txt).then(function(){{
-                            var btn = document.getElementById(\'os-copy-btn\');
-                            btn.innerHTML = \'✓ Đã copy\';
-                            btn.classList.add(\'copied\');
-                            setTimeout(function(){{ btn.innerHTML = \'⎘ Copy tên\'; btn.classList.remove(\'copied\'); }}, 2000);
-                        }});
-                    ">⎘ Copy tên</button>
-                </div>
-                <span class="os-dl-stats">{total_orders} đơn · {total_items} sp · {unique_skus_count} SKU</span>
-            </div>
-        </div>''', unsafe_allow_html=True)
 
         # ── Chi tiết theo SKU ─────────────────────────────────────────────────
         st.markdown('<div class="os-divider"></div>', unsafe_allow_html=True)
