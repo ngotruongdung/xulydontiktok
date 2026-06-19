@@ -1232,8 +1232,8 @@ else:
                 # GIMME: P(15)=SKU, V(21)=Phân loại, AB(27)=Số lượng
                 sku_col_index, variation_col_index, qty_col_index = 15, 21, 27
             else:
-                # TITIKID: S(18)=SKU, T(19)=Phân loại, Z(25)=Số lượng
-                sku_col_index, variation_col_index, qty_col_index = 18, 19, 25
+                # TITIKID: O(14)=SKU, T(19)=Phân loại, Z(25)=Số lượng
+                sku_col_index, variation_col_index, qty_col_index = 14, 19, 25
 
         max_col_needed = max(sku_col_index, variation_col_index, qty_col_index)
         if len(df.columns) <= max_col_needed:
@@ -1244,8 +1244,8 @@ else:
         col_variation = df.columns[variation_col_index]
         col_qty       = df.columns[qty_col_index]
 
-        # Shopee GIMME dùng cột A để đếm/lọc đơn; Shopee TITIKID dùng cột G (mã vận đơn).
-        if platform == "SHOPEE" and shop_name != "GIMME":
+        # Shopee GIMME và TITIKID dùng cột A để đếm/lọc đơn.
+        if platform == "SHOPEE" and shop_name not in ("GIMME", "TITIKID"):
             if len(df.columns) <= 6:
                 st.error("❌ File Shopee không đủ cột. Cần ít nhất cột G (mã vận đơn).")
                 st.stop()
@@ -1280,8 +1280,8 @@ else:
                     df_prev = pd.read_excel(prev_file, engine='calamine', dtype=str)
                 df_prev = df_prev.dropna(how='all').reset_index(drop=True)
 
-                # Shopee GIMME dùng cột A cho file ca trước; Shopee TITIKID dùng cột G.
-                if platform == "SHOPEE" and shop_name != "GIMME" and len(df_prev.columns) > 6:
+                # Shopee GIMME và TITIKID dùng cột A cho file ca trước.
+                if platform == "SHOPEE" and shop_name not in ("GIMME", "TITIKID") and len(df_prev.columns) > 6:
                     prev_id_col = df_prev.columns[6]
                     # Bỏ dòng không có mã vận đơn trong file ca trước
                     df_prev = df_prev[df_prev[prev_id_col].astype(str).str.strip().ne('') & df_prev[prev_id_col].notna()].reset_index(drop=True)
