@@ -1232,8 +1232,8 @@ else:
                 # GIMME: P(15)=SKU, V(21)=Phân loại, AB(27)=Số lượng
                 sku_col_index, variation_col_index, qty_col_index = 15, 21, 27
             else:
-                # TITIKID: O(14)=SKU, T(19)=Phân loại, Z(25)=Số lượng
-                sku_col_index, variation_col_index, qty_col_index = 14, 19, 25
+                # TITIKID: P(15)=SKU, U(20)=Phân loại, AA(26)=Số lượng
+                sku_col_index, variation_col_index, qty_col_index = 15, 20, 26
 
         max_col_needed = max(sku_col_index, variation_col_index, qty_col_index)
         if len(df.columns) <= max_col_needed:
